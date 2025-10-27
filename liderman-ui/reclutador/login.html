@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Reclutador | Liderman</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0f1e;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* Gradiente animado de fondo */
+    .hero-gradient {
+      background: linear-gradient(135deg, 
+        #0a0f1e 0%, 
+        #111827 25%,
+        #1e293b 50%,
+        #0f172a 75%,
+        #0a0f1e 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      min-height: 100vh;
+    }
+    
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    /* Glass card minimalista */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .glass-card:hover {
+      border-color: rgba(59, 130, 246, 0.2);
+      box-shadow: 0 12px 40px rgba(37, 99, 235, 0.15);
+    }
+    
+    /* Input minimalista */
+    .modern-input {
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      color: #fff;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 400;
+    }
+    
+    .modern-input:focus {
+      background: rgba(15, 23, 42, 0.6);
+      border-color: rgba(59, 130, 246, 0.5);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      outline: none;
+      transform: translateY(-1px);
+    }
+
+    .modern-input::placeholder {
+      color: rgba(148, 163, 184, 0.4);
+      font-weight: 300;
+    }
+
+    /* Botón submit */
+    .btn-submit {
+      background: linear-gradient(135deg, #ec4899 0%, #f43f5e 50%, #3b82f6 100%);
+      background-size: 200% 200%;
+      box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-submit::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .btn-submit:hover::before {
+      left: 100%;
+    }
+
+    .btn-submit:hover {
+      background-position: 100% 50%;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(236, 72, 153, 0.4);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    /* Animación de entrada */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in {
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  </style>
+</head>
+<body class="hero-gradient flex items-center justify-center p-6">
+
+  <div class="glass-card rounded-3xl w-full max-w-md p-8 animate-fade-in">
+    
+    <!-- Logo y título -->
+    <div class="text-center mb-8">
+      <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500/20 to-pink-500/20 flex items-center justify-center backdrop-blur-xl border border-white/10 mx-auto mb-4">
+        <svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+        </svg>
+      </div>
+      <h1 class="text-3xl font-bold mb-2">
+        <span class="gradient-text">Portal Reclutador</span>
+      </h1>
+      <p class="text-slate-400 text-sm font-light">
+        Sistema de Gestión de Requerimientos
+      </p>
+    </div>
+
+    <!-- Formulario de login -->
+    <form id="loginForm" class="space-y-6">
+      
+      <!-- Usuario -->
+      <div class="space-y-2.5">
+        <label class="text-sm font-medium text-slate-400 flex items-center gap-2">
+          <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+          USUARIO
+        </label>
+        <input 
+          type="text" 
+          id="username" 
+          required
+          placeholder="reclutador1"
+          class="w-full modern-input rounded-xl px-4 py-3.5 text-white outline-none text-sm"
+        >
+      </div>
+
+      <!-- Contraseña -->
+      <div class="space-y-2.5">
+        <label class="text-sm font-medium text-slate-400 flex items-center gap-2">
+          <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+          CONTRASEÑA
+        </label>
+        <input 
+          type="password" 
+          id="password" 
+          required
+          placeholder="••••••••"
+          class="w-full modern-input rounded-xl px-4 py-3.5 text-white outline-none text-sm"
+        >
+      </div>
+
+      <!-- Mensaje de error -->
+      <div id="errorMessage" class="hidden p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span id="errorText">Usuario o contraseña incorrectos</span>
+        </div>
+      </div>
+
+      <!-- Botón de login -->
+      <button 
+        type="submit"
+        class="btn-submit w-full py-4 px-6 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 text-sm relative z-10"
+      >
+        <span id="btnText">Iniciar Sesión</span>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+        </svg>
+      </button>
+
+      <!-- Recordar sesión -->
+      <div class="flex items-center justify-between text-sm">
+        <label class="flex items-center gap-2 text-slate-400 cursor-pointer">
+          <input type="checkbox" id="remember" class="w-4 h-4 rounded border-slate-600 bg-slate-800">
+          <span>Recordar sesión</span>
+        </label>
+        <a href="../landing.html" class="text-blue-400 hover:text-blue-300 transition-colors">
+          Portal Postulante
+        </a>
+      </div>
+
+    </form>
+
+    <!-- Info adicional -->
+    <div class="mt-8 pt-6 border-t border-white/5">
+      <p class="text-center text-xs text-slate-500">
+        Sistema de Gestión de Requerimientos - Liderman<br>
+        © 2025 Todos los derechos reservados
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    // Usuarios válidos (en producción esto vendría de una API)
+    const usuarios = {
+      'reclutador1': 'reclutador1',
+      'estefanny.cullqui': 'liderman2025',
+      'ximena.paredes': 'liderman2025',
+      'laura.rios': 'liderman2025',
+      'admin': 'admin123'
+    };
+
+    // Información de reclutadores
+    const reclutadoresInfo = {
+      'reclutador1': {
+        nombre: 'Reclutador Demo',
+        rol: 'Reclutador Senior',
+        email: 'reclutador1@liderman.com'
+      },
+      'estefanny.cullqui': {
+        nombre: 'Estefanny Cullqui',
+        rol: 'Reclutador',
+        email: 'estefanny.cullqui@liderman.com'
+      },
+      'ximena.paredes': {
+        nombre: 'Ximena Paredes',
+        rol: 'Reclutador',
+        email: 'ximena.paredes@liderman.com'
+      },
+      'laura.rios': {
+        nombre: 'Laura Rios',
+        rol: 'Reclutador',
+        email: 'laura.rios@liderman.com'
+      },
+      'admin': {
+        nombre: 'Administrador',
+        rol: 'Administrador del Sistema',
+        email: 'admin@liderman.com'
+      }
+    };
+
+    const loginForm = document.getElementById('loginForm');
+    const errorMessage = document.getElementById('errorMessage');
+    const errorText = document.getElementById('errorText');
+    const btnText = document.getElementById('btnText');
+
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const remember = document.getElementById('remember').checked;
+
+      // Validar credenciales
+      if (usuarios[username] && usuarios[username] === password) {
+        // Login exitoso
+        errorMessage.classList.add('hidden');
+        
+        // Guardar sesión
+        const sessionData = {
+          username: username,
+          ...reclutadoresInfo[username],
+          loginTime: new Date().toISOString()
+        };
+
+        if (remember) {
+          localStorage.setItem('reclutadorSession', JSON.stringify(sessionData));
+        }
+        sessionStorage.setItem('reclutadorSession', JSON.stringify(sessionData));
+
+        // Animación de éxito
+        btnText.textContent = '✓ Acceso concedido';
+        loginForm.querySelector('button').classList.add('bg-green-600');
+
+        // Redireccionar al dashboard
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 1000);
+
+      } else {
+        // Login fallido
+        errorMessage.classList.remove('hidden');
+        errorText.textContent = '❌ Usuario o contraseña incorrectos';
+        
+        // Animar error
+        errorMessage.classList.add('animate-fade-in');
+        
+        // Limpiar contraseña
+        document.getElementById('password').value = '';
+        document.getElementById('password').focus();
+
+        // Animación de shake
+        loginForm.classList.add('animate-shake');
+        setTimeout(() => {
+          loginForm.classList.remove('animate-shake');
+        }, 500);
+      }
+    });
+
+    // Verificar si ya hay sesión activa
+    window.addEventListener('load', () => {
+      const sessionData = sessionStorage.getItem('reclutadorSession') || 
+                          localStorage.getItem('reclutadorSession');
+      
+      if (sessionData) {
+        const session = JSON.parse(sessionData);
+        console.log('Sesión activa encontrada:', session);
+        
+        // Mostrar mensaje y redireccionar
+        btnText.textContent = 'Redireccionando...';
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 500);
+      }
+    });
+
+    // Animación de shake
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+      }
+      .animate-shake {
+        animation: shake 0.5s ease;
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+
+</body>
+</html>

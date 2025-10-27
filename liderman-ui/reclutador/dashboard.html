@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Reclutador | Liderman</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0f1e;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* Gradiente animado de fondo */
+    .hero-gradient {
+      background: linear-gradient(135deg, 
+        #0a0f1e 0%, 
+        #111827 25%,
+        #1e293b 50%,
+        #0f172a 75%,
+        #0a0f1e 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      min-height: 100vh;
+    }
+    
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    /* Glass card minimalista */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .glass-card:hover {
+      border-color: rgba(59, 130, 246, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(37, 99, 235, 0.15);
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(10, 15, 30, 0.6);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    /* Badge */
+    .badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-primary {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .badge-success {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* Botón */
+    .btn-primary {
+      background: linear-gradient(135deg, #ec4899 0%, #f43f5e 50%, #3b82f6 100%);
+      background-size: 200% 200%;
+      box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-primary:hover {
+      background-position: 100% 50%;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(236, 72, 153, 0.4);
+    }
+
+    /* Stats */
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #60a5fa 0%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+    }
+  </style>
+</head>
+<body class="hero-gradient">
+
+  <!-- Navbar -->
+  <nav class="navbar fixed w-full top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-pink-500/20 flex items-center justify-center backdrop-blur-xl border border-white/10">
+            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-sm font-bold">Dashboard Reclutador</h1>
+            <p class="text-xs text-slate-400" id="userInfo">Cargando...</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-4">
+          <button onclick="window.location.href='../landing.html'" class="text-slate-400 hover:text-blue-400 text-sm font-medium transition-colors">
+            Portal Postulante
+          </button>
+          <button onclick="cerrarSesion()" class="text-red-400 hover:text-red-300 text-sm font-medium flex items-center gap-2 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+            </svg>
+            Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenido Principal -->
+  <main class="max-w-7xl mx-auto px-6 pt-24 pb-12">
+    
+    <!-- Bienvenida -->
+    <div class="mb-8">
+      <h2 class="text-3xl font-bold mb-2">
+        <span class="gradient-text">Mis Requerimientos</span>
+      </h2>
+      <p class="text-slate-400 text-sm">
+        Gestiona y realiza seguimiento a todos tus requerimientos activos
+      </p>
+    </div>
+
+    <!-- Estadísticas Generales -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      
+      <div class="glass-card rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+          </div>
+        </div>
+        <div class="stat-number">256</div>
+        <div class="text-sm text-slate-400 mt-1">Postulantes Totales</div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+            <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+        </div>
+        <div class="stat-number">143</div>
+        <div class="text-sm text-slate-400 mt-1">Aptos</div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-yellow-500/20 flex items-center justify-center">
+            <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+        </div>
+        <div class="stat-number">68</div>
+        <div class="text-sm text-slate-400 mt-1">En Proceso</div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center">
+            <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </div>
+        </div>
+        <div class="stat-number">45</div>
+        <div class="text-sm text-slate-400 mt-1">Descartados</div>
+      </div>
+
+    </div>
+
+    <!-- Tarjetas de Requerimientos -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="requerimientosContainer">
+      <!-- Se llenarán dinámicamente -->
+    </div>
+
+  </main>
+
+  <script>
+    // Verificar autenticación
+    function verificarAutenticacion() {
+      const sessionData = sessionStorage.getItem('reclutadorSession') || 
+                          localStorage.getItem('reclutadorSession');
+      
+      if (!sessionData) {
+        window.location.href = 'login.html';
+        return null;
+      }
+      
+      return JSON.parse(sessionData);
+    }
+
+    // Cerrar sesión
+    function cerrarSesion() {
+      if (confirm('¿Estás seguro de cerrar sesión?')) {
+        sessionStorage.removeItem('reclutadorSession');
+        localStorage.removeItem('reclutadorSession');
+        window.location.href = 'login.html';
+      }
+    }
+
+    // Datos de requerimientos (simulados)
+    const requerimientos = [
+      {
+        codigo: 'RQ-CD-1',
+        cliente: 'Cencosud',
+        unidad: 'CD Sur',
+        totalPostulantes: 45,
+        aptos: 28,
+        enProceso: 12,
+        descartados: 5,
+        estado: 'Activo',
+        prioridad: 'Alta',
+        vacantes: 100,
+        cubiertos: 28
+      },
+      {
+        codigo: 'RQ-CD-2',
+        cliente: 'Cencosud',
+        unidad: 'CD Norte',
+        totalPostulantes: 38,
+        aptos: 22,
+        enProceso: 10,
+        descartados: 6,
+        estado: 'Activo',
+        prioridad: 'Media',
+        vacantes: 80,
+        cubiertos: 22
+      },
+      {
+        codigo: 'RQ-CD-3',
+        cliente: 'Cencosud',
+        unidad: 'CD Este',
+        totalPostulantes: 52,
+        aptos: 35,
+        enProceso: 15,
+        descartados: 2,
+        estado: 'Activo',
+        prioridad: 'Alta',
+        vacantes: 120,
+        cubiertos: 35
+      },
+      {
+        codigo: 'RQ-UNI-1',
+        cliente: 'Universidad Nacional',
+        unidad: 'Campus Principal',
+        totalPostulantes: 32,
+        aptos: 18,
+        enProceso: 11,
+        descartados: 3,
+        estado: 'Activo',
+        prioridad: 'Baja',
+        vacantes: 50,
+        cubiertos: 18
+      },
+      {
+        codigo: 'RQ-UNI-2',
+        cliente: 'Universidad Nacional',
+        unidad: 'Campus Norte',
+        totalPostulantes: 28,
+        aptos: 15,
+        enProceso: 9,
+        descartados: 4,
+        estado: 'Activo',
+        prioridad: 'Media',
+        vacantes: 40,
+        cubiertos: 15
+      },
+      {
+        codigo: 'RQ-MNF-1',
+        cliente: 'Manufactura SAC',
+        unidad: 'Planta Callao',
+        totalPostulantes: 61,
+        aptos: 25,
+        enProceso: 11,
+        descartados: 25,
+        estado: 'Activo',
+        prioridad: 'Alta',
+        vacantes: 150,
+        cubiertos: 25
+      }
+    ];
+
+    // Renderizar tarjetas
+    function renderizarRequerimientos() {
+      const container = document.getElementById('requerimientosContainer');
+      
+      requerimientos.forEach(req => {
+        const porcentaje = Math.round((req.cubiertos / req.vacantes) * 100);
+        const prioridadClass = {
+          'Alta': 'badge-danger',
+          'Media': 'badge-warning',
+          'Baja': 'badge-primary'
+        };
+
+        const card = `
+          <div class="glass-card rounded-2xl p-6 cursor-pointer" onclick="verPostulantes('${req.codigo}')">
+            <!-- Header -->
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <div class="flex items-center gap-2 mb-2">
+                  <h3 class="text-xl font-bold text-white">${req.codigo}</h3>
+                  <span class="badge ${prioridadClass[req.prioridad]}">${req.prioridad}</span>
+                </div>
+                <p class="text-sm text-slate-400">${req.cliente}</p>
+                <p class="text-xs text-slate-500">${req.unidad}</p>
+              </div>
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-pink-500/20 flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Progreso -->
+            <div class="mb-4">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-sm text-slate-400">Avance de Cobertura</span>
+                <span class="text-sm font-semibold text-blue-400">${req.cubiertos}/${req.vacantes}</span>
+              </div>
+              <div class="w-full bg-slate-800/50 rounded-full h-2 overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-blue-500 to-pink-500 rounded-full transition-all duration-500" style="width: ${porcentaje}%"></div>
+              </div>
+              <div class="text-xs text-slate-500 mt-1 text-right">${porcentaje}%</div>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-4 mb-4">
+              <div class="text-center">
+                <div class="text-2xl font-bold text-green-400">${req.aptos}</div>
+                <div class="text-xs text-slate-500">Aptos</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-yellow-400">${req.enProceso}</div>
+                <div class="text-xs text-slate-500">En Proceso</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-red-400">${req.descartados}</div>
+                <div class="text-xs text-slate-500">Descartados</div>
+              </div>
+            </div>
+
+            <!-- Botón -->
+            <button class="btn-primary w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2">
+              Ver Postulantes
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+              </svg>
+            </button>
+          </div>
+        `;
+        
+        container.innerHTML += card;
+      });
+    }
+
+    // Ver postulantes de un requerimiento
+    function verPostulantes(codigo) {
+      sessionStorage.setItem('requerimientoActual', codigo);
+      window.location.href = 'seguimiento-borrador.html';
+    }
+
+    // Inicializar
+    window.addEventListener('load', () => {
+      const session = verificarAutenticacion();
+      if (session) {
+        document.getElementById('userInfo').textContent = `${session.nombre} - ${session.rol}`;
+        renderizarRequerimientos();
+      }
+    });
+  </script>
+
+</body>
+</html>

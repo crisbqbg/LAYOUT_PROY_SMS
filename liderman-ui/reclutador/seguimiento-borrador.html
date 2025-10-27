@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seguimiento Borrador | Liderman</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0f1e;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    .hero-gradient {
+      background: linear-gradient(135deg, 
+        #0a0f1e 0%, 
+        #111827 25%,
+        #1e293b 50%,
+        #0f172a 75%,
+        #0a0f1e 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      min-height: 100vh;
+    }
+    
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .navbar {
+      background: rgba(10, 15, 30, 0.6);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    /* Tabla responsiva */
+    .table-container {
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.75rem;
+    }
+
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    th {
+      padding: 0.75rem 0.5rem;
+      text-align: left;
+      font-weight: 600;
+      white-space: nowrap;
+      backdrop-filter: blur(20px);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      min-width: 120px;
+    }
+
+    td {
+      padding: 0.75rem 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      vertical-align: middle;
+      position: relative;
+      min-width: 120px;
+    }
+
+    /* Resizer para columnas */
+    .column-resizer {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 5px;
+      height: 100%;
+      cursor: col-resize;
+      user-select: none;
+      z-index: 20;
+      background: transparent;
+      transition: background 0.2s;
+    }
+
+    .column-resizer:hover,
+    .column-resizer.resizing {
+      background: rgba(59, 130, 246, 0.5);
+    }
+
+    /* Botones de columna */
+    .column-controls {
+      display: none;
+      position: absolute;
+      top: 0.25rem;
+      right: 0.25rem;
+      gap: 0.25rem;
+      z-index: 15;
+    }
+
+    th:hover .column-controls {
+      display: flex;
+    }
+
+    .column-btn {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 0.25rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .column-btn:hover {
+      background: rgba(59, 130, 246, 0.5);
+      border-color: rgba(59, 130, 246, 0.5);
+      transform: scale(1.1);
+    }
+
+    .column-btn svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    /* Drag and drop */
+    .dragging {
+      opacity: 0.5;
+    }
+
+    .drag-over {
+      border-left: 3px solid #3b82f6 !important;
+    }
+
+    /* Columnas rojas (datos principales) */
+    .col-red {
+      background: rgba(239, 68, 68, 0.08);
+      border-left: 2px solid rgba(239, 68, 68, 0.3);
+    }
+
+    th.col-red {
+      color: #f87171;
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    /* Columnas amarillas (proceso) */
+    .col-yellow {
+      background: rgba(245, 158, 11, 0.08);
+      border-left: 2px solid rgba(245, 158, 11, 0.3);
+    }
+
+    th.col-yellow {
+      color: #fbbf24;
+      background: rgba(245, 158, 11, 0.15);
+    }
+
+    /* Select/Input minimalistas */
+    .table-select, .table-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      padding: 0.5rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      width: 100%;
+      transition: all 0.3s;
+      min-height: 36px;
+    }
+
+    .table-select:focus, .table-input:focus {
+      outline: none;
+      border-color: rgba(59, 130, 246, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .table-select option {
+      background: #1e293b;
+      color: #fff;
+    }
+
+    /* Textarea para observación */
+    .table-textarea {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      padding: 0.5rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      width: 100%;
+      min-height: 60px;
+      resize: vertical;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.3s;
+    }
+
+    .table-textarea:focus {
+      outline: none;
+      border-color: rgba(59, 130, 246, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { 
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #60a5fa 0%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .option-item input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      padding: 0.5rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+    }
+
+    .btn-remove-option {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      padding: 0.5rem;
+      border-radius: 0.375rem;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-remove-option:hover {
+      background: rgba(239, 68, 68, 0.3);
+    }
+
+    /* Botones */
+    .btn-add {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+      transition: all 0.3s;
+    }
+
+    .btn-add:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-save {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-save:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-delete {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      transition: all 0.3s;
+    }
+
+    .btn-delete:hover {
+      background: rgba(239, 68, 68, 0.3);
+      transform: scale(1.05);
+    }
+
+    /* Scroll personalizado */
+    .table-container::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .table-container::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.3);
+      border-radius: 10px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb:hover {
+      background: rgba(59, 130, 246, 0.5);
+    }
+  </style>
+</head>
+<body class="hero-gradient">
+
+  <!-- Navbar -->
+  <nav class="navbar fixed w-full top-0 z-50">
+    <div class="max-w-full mx-auto px-6 py-4">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-4">
+          <button onclick="volver()" class="text-slate-400 hover:text-blue-400 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+          </button>
+          <div>
+            <h1 class="text-sm font-bold" id="tituloRequerimiento">Seguimiento Borrador</h1>
+            <p class="text-xs text-slate-400" id="infoRequerimiento">Cargando...</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+          <button onclick="agregarColumna()" class="btn-add px-4 py-2 rounded-xl font-semibold text-sm flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Nueva Columna
+          </button>
+          <button onclick="agregarFila()" class="btn-add px-4 py-2 rounded-xl font-semibold text-sm flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Agregar Fila
+          </button>
+          <button onclick="guardarCambios()" class="btn-save px-4 py-2 rounded-xl font-semibold text-sm flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Guardar Cambios
+          </button>
+          <button onclick="cerrarSesion()" class="text-red-400 hover:text-red-300 text-sm font-medium">
+            Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenido Principal -->
+  <main class="max-w-full mx-auto px-6 pt-24 pb-12">
+    
+    <div class="glass-card rounded-2xl p-6">
+      <div class="table-container">
+        <table id="tablaPostulantes">
+          <thead id="tableHead">
+            <!-- Se llenará dinámicamente -->
+          </thead>
+          <tbody id="tablaBody">
+            <!-- Se llenará dinámicamente -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Modal para editar opciones de dropdown -->
+  <div id="modalOpciones" class="modal-overlay">
+    <div class="modal-content">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="modal-title" id="modalTitle">Editar Opciones</h3>
+        <button onclick="cerrarModal()" class="text-slate-400 hover:text-white">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div id="opcionesContainer" class="mb-4 max-h-96 overflow-y-auto">
+        <!-- Se llenarán las opciones -->
+      </div>
+      
+      <div class="flex gap-2">
+        <button onclick="agregarOpcion()" class="flex-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 px-4 py-2 rounded-xl font-semibold text-sm transition-all">
+          + Agregar Opción
+        </button>
+        <button onclick="guardarOpciones()" class="flex-1 btn-save px-4 py-2 rounded-xl font-semibold text-sm">
+          Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para nueva columna -->
+  <div id="modalNuevaColumna" class="modal-overlay">
+    <div class="modal-content">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="modal-title">Nueva Columna</h3>
+        <button onclick="cerrarModalColumna()" class="text-slate-400 hover:text-white">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm text-slate-400 mb-2">Nombre de la columna</label>
+          <input type="text" id="nombreNuevaColumna" class="table-input" placeholder="Ej: FECHA ENTREVISTA" />
+        </div>
+        
+        <div>
+          <label class="block text-sm text-slate-400 mb-2">Tipo de columna</label>
+          <select id="tipoNuevaColumna" class="table-select">
+            <option value="dropdown">Lista desplegable</option>
+            <option value="text">Texto simple</option>
+            <option value="textarea">Texto largo</option>
+            <option value="date">Fecha</option>
+          </select>
+        </div>
+        
+        <div>
+          <label class="block text-sm text-slate-400 mb-2">Color de columna</label>
+          <select id="colorNuevaColumna" class="table-select">
+            <option value="red">Rojo (datos principales)</option>
+            <option value="yellow">Amarillo (proceso)</option>
+            <option value="none">Sin color</option>
+          </select>
+        </div>
+        
+        <div id="opcionesNuevaColumnaContainer" style="display: none;">
+          <label class="block text-sm text-slate-400 mb-2">Opciones del dropdown</label>
+          <div id="opcionesNuevaColumna" class="space-y-2 mb-2">
+            <!-- Opciones dinámicas -->
+          </div>
+          <button onclick="agregarOpcionNuevaColumna()" class="w-full bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 px-3 py-2 rounded-lg text-sm transition-all">
+            + Agregar Opción
+          </button>
+        </div>
+      </div>
+      
+      <div class="flex gap-2 mt-6">
+        <button onclick="cerrarModalColumna()" class="flex-1 bg-slate-700/50 hover:bg-slate-700 text-white px-4 py-2 rounded-xl font-semibold text-sm transition-all">
+          Cancelar
+        </button>
+        <button onclick="crearNuevaColumna()" class="flex-1 btn-save px-4 py-2 rounded-xl font-semibold text-sm">
+          Crear Columna
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Verificar autenticación
+    function verificarAutenticacion() {
+      const sessionData = sessionStorage.getItem('reclutadorSession') || 
+                          localStorage.getItem('reclutadorSession');
+      
+      if (!sessionData) {
+        window.location.href = 'login.html';
+        return null;
+      }
+      
+      return JSON.parse(sessionData);
+    }
+
+    // Cerrar sesión
+    function cerrarSesion() {
+      if (confirm('¿Estás seguro de cerrar sesión?')) {
+        sessionStorage.removeItem('reclutadorSession');
+        localStorage.removeItem('reclutadorSession');
+        window.location.href = 'login.html';
+      }
+    }
+
+    // Volver al dashboard
+    function volver() {
+      window.location.href = 'dashboard.html';
+    }
+
+    // Información del requerimiento
+    let requerimientoActual = {
+      codigo: 'RQ-CD-1',
+      cliente: 'Cencosud'
+    };
+
+    // Estructura de columnas (dinámico)
+    let columnas = [
+      { id: 'liderZonal', nombre: 'LIDER ZONAL', tipo: 'dropdown', color: 'red', width: 150, orden: 0 },
+      { id: 'reclutador', nombre: 'RECLUTADOR', tipo: 'dropdown', color: 'red', width: 180, orden: 1 },
+      { id: 'cliente', nombre: 'CLIENTE', tipo: 'text', color: 'red', width: 150, orden: 2, readonly: true },
+      { id: 'unidad', nombre: 'UNIDAD', tipo: 'dropdown', color: 'red', width: 180, orden: 3 },
+      { id: 'turno', nombre: 'TURNO', tipo: 'dropdown', color: 'red', width: 120, orden: 4 },
+      { id: 'horario', nombre: 'HORARIO', tipo: 'dropdown', color: 'red', width: 130, orden: 5 },
+      { id: 'puesto', nombre: 'PUESTO', tipo: 'dropdown', color: 'red', width: 200, orden: 6 },
+      { id: 'estadoProceso', nombre: 'ESTADO PROCESO', tipo: 'dropdown', color: 'yellow', width: 200, orden: 7 },
+      { id: 'observacion', nombre: 'OBSERVACIÓN', tipo: 'textarea', color: 'yellow', width: 280, orden: 8 },
+      { id: 'baseFinal', nombre: '¿ESTA EN BASE FINAL?', tipo: 'dropdown', color: 'red', width: 180, orden: 9 },
+      { id: 'validacionCliente', nombre: 'VALIDACIÓN CLIENTE', tipo: 'dropdown', color: 'yellow', width: 180, orden: 10 },
+      { id: 'tipoPostulante', nombre: 'TIPO DE POSTULANTE', tipo: 'dropdown', color: 'red', width: 180, orden: 11 },
+      { id: 'medioCaptacion', nombre: 'MEDIO DE CAPTACIÓN', tipo: 'dropdown', color: 'red', width: 180, orden: 12 },
+      { id: 'dniTexto', nombre: 'DNI TEXTO', tipo: 'text', color: null, width: 120, orden: 13 },
+      { id: 'dni', nombre: 'DNI', tipo: 'text', color: null, width: 120, orden: 14 },
+      { id: 'verificacionInterna', nombre: 'VERIFICACIÓN INTERNA', tipo: 'dropdown', color: 'yellow', width: 180, orden: 15 },
+      { id: 'apellidosNombres', nombre: 'APELLIDOS Y NOMBRES', tipo: 'text', color: null, width: 250, orden: 16 },
+      { id: 'genero', nombre: 'GENERO', tipo: 'dropdown', color: null, width: 120, orden: 17 },
+      { id: 'telefono', nombre: 'TELÉFONO', tipo: 'text', color: null, width: 180, orden: 18 },
+      { id: 'distritoResidencia', nombre: 'DISTRITO DE RESIDENCIA', tipo: 'text', color: null, width: 200, orden: 19 },
+      { id: 'fechaNacimiento', nombre: 'FECHA DE NACIMIENTO', tipo: 'date', color: null, width: 180, orden: 20 },
+      { id: 'edad', nombre: 'EDAD', tipo: 'text', color: null, width: 100, orden: 21 },
+      { id: 'experiencia', nombre: 'EXPERIENCIA', tipo: 'text', color: null, width: 150, orden: 22 },
+      { id: 'reingreso', nombre: 'REINGRESO', tipo: 'dropdown', color: null, width: 160, orden: 23 },
+      { id: 'blacklist', nombre: 'BLACKLIST', tipo: 'dropdown', color: null, width: 130, orden: 24 },
+      { id: 'cursoSucamec', nombre: 'CURSO SUCAMEC', tipo: 'dropdown', color: null, width: 180, orden: 25 },
+      { id: 'sucamecVencimiento', nombre: 'SUCAMEC (FECHA DE VENCIMIENTO)', tipo: 'date', color: null, width: 220, orden: 26 },
+      { id: 'carnetSucamec', nombre: 'CARNET SUCAMEC', tipo: 'dropdown', color: null, width: 150, orden: 27 },
+      { id: 'razonSocial', nombre: 'RAZÓN SOCIAL', tipo: 'text', color: null, width: 200, orden: 28 },
+      { id: 'inicioCurso', nombre: 'INICIO DE CURSO', tipo: 'date', color: null, width: 150, orden: 29 },
+      { id: 'finCurso', nombre: 'FIN DE CURSO', tipo: 'date', color: null, width: 150, orden: 30 },
+      { id: 'observacionesSucamec', nombre: 'OBSERVACIONES SUCAMEC', tipo: 'textarea', color: null, width: 220, orden: 31 },
+      { id: 'llenadoDj', nombre: 'LLENADO DJ Y PROGRAMACIÓN MEDICA', tipo: 'dropdown', color: null, width: 250, orden: 32 },
+      { id: 'multasElectorales', nombre: 'MULTAS ELECTORALES', tipo: 'text', color: null, width: 180, orden: 33 },
+      { id: 'fechaProgramacion', nombre: 'FECHA DE PROGRAMACIÓN', tipo: 'date', color: null, width: 180, orden: 34 },
+      { id: 'clinica', nombre: 'CLÍNICA', tipo: 'dropdown', color: null, width: 150, orden: 35 },
+      { id: 'aptitudEmo', nombre: 'APTITUD EMO', tipo: 'dropdown', color: null, width: 150, orden: 36 },
+      { id: 'observacionEmo', nombre: 'OBSERVACIÓN EMO', tipo: 'textarea', color: null, width: 220, orden: 37 },
+      { id: 'induccionLiderman', nombre: 'INDUCCIÓN LIDERMAN', tipo: 'dropdown', color: null, width: 180, orden: 38 },
+      { id: 'seiscursosEsl', nombre: '6 CURSOS ESL', tipo: 'dropdown', color: null, width: 150, orden: 39 },
+      { id: 'legajoLiderman', nombre: 'LEGAJO LIDERMAN', tipo: 'text', color: null, width: 150, orden: 40 },
+      { id: 'fotocheck', nombre: 'FOTOCHECK', tipo: 'text', color: null, width: 130, orden: 41 },
+      { id: 'segurosSctr', nombre: 'SEGUROS SCTR Y VIDA LEY', tipo: 'text', color: null, width: 200, orden: 42 },
+      { id: 'solicitudUniformes', nombre: 'SOLICITUD DE UNIFORMES (CORREO)', tipo: 'dropdown', color: null, width: 250, orden: 43 },
+      { id: 'cargaDocumentaria', nombre: 'CARGA DOCUMENTARIA', tipo: 'dropdown', color: null, width: 180, orden: 44 },
+      { id: 'linkPreAlta', nombre: 'LINK PRE ALTA', tipo: 'text', color: null, width: 150, orden: 45 },
+      { id: 'fechaAlta', nombre: 'FECHA DE ALTA', tipo: 'date', color: null, width: 150, orden: 46 },
+      { id: 'baseFinalCompleta', nombre: 'BASE FINAL', tipo: 'dropdown', color: null, width: 130, orden: 47 }
+    ];
+
+    // Opciones de campos (dinámico)
+    let opciones = {
+      liderZonal: ['CRISTIANO', 'ROBERTO', 'MARIA', 'JOSE'],
+      reclutador: ['XIMENA PAREDES', 'LAURA RIOS', 'STEFANY CULQUI', 'ESTEFANNY CULLQUI'],
+      unidad: ['CD SANTA ANITA', 'CD SUR', 'CD NORTE', 'CD ESTE'],
+      turno: ['8 HORAS', '12 HORAS'],
+      horario: ['DIURNO', 'NOCTURNO', 'ROTATIVO'],
+      puesto: ['AGENTE DE SEGURIDAD', 'SUPERVISOR', 'JEFE DE OPERACIONES'],
+      estadoProceso: ['NO ACEPTA REENGANCHE', 'ACEPTA REENGANCHE', 'BASE FINAL', 'NO RESPONDE', 'DESCARTADO', 'ENTREVISTA PROGRAMADA', 'EN EVALUACIÓN', 'PENDIENTE'],
+      baseFinal: ['TITULAR', 'NO REGISTRADO'],
+      validacionCliente: ['VERIFICADO', 'PENDIENTE', 'RECHAZADO'],
+      tipoPostulante: ['REENGANCHE', 'EXTERNO', 'INTERNO', 'NUEVO'],
+      medioCaptacion: ['LINKEDIN', 'COMPUTRABAJO', 'BUMERAN', 'INDEED', 'FACEBOOK', 'REFERIDO', 'OTROS'],
+      verificacionInterna: ['APTO', 'NO APTO', 'OBSERVADO', 'PENDIENTE'],
+      genero: ['MASCULINO', 'FEMENINO'],
+      reingreso: ['NO ES REINGRESO', 'REINGRESO'],
+      blacklist: ['VERIFICADO', 'OBSERVADO', 'PENDIENTE'],
+      cursoSucamec: ['VIGENTE', 'BÁSICO', 'PERFECCIONAMIENTO', 'VENCIDO', 'EN PROCESO'],
+      carnetSucamec: ['VIGENTE', 'VENCIDO', 'EN TRÁMITE', 'NUEVO'],
+      llenadoDj: ['COMPLETO', 'INCOMPLETO', 'PENDIENTE'],
+      clinica: ['ISSALUD', 'OCUPACIONAL MEDICAL', 'ASISMED', 'OTROS'],
+      aptitudEmo: ['APTO', 'NO APTO', 'OBSERVADO', 'OBSERVADO (IC)', 'PROGRAMADO', 'PENDIENTE'],
+      induccionLiderman: ['APROBADO', 'PENDIENTE', 'NO ASISTIÓ'],
+      seiscursosEsl: ['APROBADO', 'PENDIENTE', 'EN PROCESO'],
+      solicitudUniformes: ['SOLICITADO', 'ENTREGADO', 'PENDIENTE'],
+      cargaDocumentaria: ['COMPLETO', 'INCOMPLETO', 'PENDIENTE'],
+      baseFinalCompleta: ['COMPLETO', 'INCOMPLETO', 'PENDIENTE']
+    };
+
+    // Datos de postulantes
+    let postulantes = [];
+
+    // Variables para drag & drop y resize
+    let draggedColumn = null;
+    let resizingColumn = null;
+    let startX = 0;
+    let startWidth = 0;
+    let currentEditingField = null;
+
+    // ===== FUNCIONES DE COLUMNAS =====
+
+    // Renderizar encabezados
+    function renderizarEncabezados() {
+      const thead = document.getElementById('tableHead');
+      const columnasOrdenadas = [...columnas].sort((a, b) => a.orden - b.orden);
+      
+      let html = '<tr>';
+      columnasOrdenadas.forEach((col, index) => {
+        const colorClass = col.color ? `col-${col.color}` : '';
+        html += `
+          <th class="${colorClass}" 
+              data-col-id="${col.id}" 
+              data-col-index="${index}"
+              style="width: ${col.width}px; min-width: ${col.width}px; max-width: ${col.width}px;"
+              draggable="true"
+              ondragstart="iniciarArrastre(event)"
+              ondragover="permitirSoltar(event)"
+              ondrop="soltar(event)"
+              ondragend="finalizarArrastre(event)">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding-right: 20px;">
+              <span>${col.nombre}</span>
+              <div class="column-controls" style="display: flex; gap: 0.25rem;">
+                <div class="column-btn" onclick="editarOpciones('${col.id}')" title="Editar opciones">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                  </svg>
+                </div>
+                ${!col.readonly ? `
+                <div class="column-btn" onclick="eliminarColumna('${col.id}')" title="Eliminar columna">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </div>
+                ` : ''}
+              </div>
+            </div>
+            <div class="column-resizer" 
+                 onmousedown="iniciarRedimension(event, '${col.id}')"></div>
+          </th>
+        `;
+      });
+      html += '<th style="width: 120px; min-width: 120px;">ACCIONES</th>';
+      html += '</tr>';
+      
+      thead.innerHTML = html;
+    }
+
+    // Drag & Drop de columnas
+    function iniciarArrastre(e) {
+      draggedColumn = e.target.closest('th').dataset.colId;
+      e.target.closest('th').classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function permitirSoltar(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      const th = e.target.closest('th');
+      if (th && !th.classList.contains('dragging')) {
+        th.classList.add('drag-over');
+      }
+    }
+
+    function soltar(e) {
+      e.preventDefault();
+      const targetTh = e.target.closest('th');
+      document.querySelectorAll('th').forEach(th => th.classList.remove('drag-over'));
+      
+      if (!targetTh || !targetTh.dataset.colId) return;
+      
+      const targetId = targetTh.dataset.colId;
+      if (draggedColumn === targetId) return;
+      
+      // Reordenar columnas
+      const draggedCol = columnas.find(c => c.id === draggedColumn);
+      const targetCol = columnas.find(c => c.id === targetId);
+      
+      if (draggedCol && targetCol) {
+        const tempOrden = draggedCol.orden;
+        draggedCol.orden = targetCol.orden;
+        targetCol.orden = tempOrden;
+        
+        renderizarEncabezados();
+        renderizarTabla();
+      }
+    }
+
+    function finalizarArrastre(e) {
+      e.target.closest('th').classList.remove('dragging');
+      document.querySelectorAll('th').forEach(th => th.classList.remove('drag-over'));
+      draggedColumn = null;
+    }
+
+    // Redimensionar columnas
+    function iniciarRedimension(e, colId) {
+      e.preventDefault();
+      e.stopPropagation();
+      resizingColumn = colId;
+      startX = e.pageX;
+      
+      const col = columnas.find(c => c.id === colId);
+      startWidth = col ? col.width : 120;
+      
+      document.addEventListener('mousemove', redimensionar);
+      document.addEventListener('mouseup', finalizarRedimension);
+      
+      e.target.classList.add('resizing');
+    }
+
+    function redimensionar(e) {
+      if (!resizingColumn) return;
+      
+      const diff = e.pageX - startX;
+      const newWidth = Math.max(80, startWidth + diff);
+      
+      const col = columnas.find(c => c.id === resizingColumn);
+      if (col) {
+        col.width = newWidth;
+        
+        // Actualizar ancho en tiempo real
+        const ths = document.querySelectorAll(`th[data-col-id="${resizingColumn}"]`);
+        const tds = document.querySelectorAll(`td[data-col-id="${resizingColumn}"]`);
+        
+        ths.forEach(th => {
+          th.style.width = `${newWidth}px`;
+          th.style.minWidth = `${newWidth}px`;
+          th.style.maxWidth = `${newWidth}px`;
+        });
+        
+        tds.forEach(td => {
+          td.style.width = `${newWidth}px`;
+          td.style.minWidth = `${newWidth}px`;
+          td.style.maxWidth = `${newWidth}px`;
+        });
+      }
+    }
+
+    function finalizarRedimension(e) {
+      document.removeEventListener('mousemove', redimensionar);
+      document.removeEventListener('mouseup', finalizarRedimension);
+      
+      document.querySelectorAll('.column-resizer').forEach(r => r.classList.remove('resizing'));
+      resizingColumn = null;
+    }
+
+    // Agregar columna
+    function agregarColumna() {
+      document.getElementById('modalNuevaColumna').classList.add('active');
+      document.getElementById('nombreNuevaColumna').value = '';
+      document.getElementById('tipoNuevaColumna').value = 'dropdown';
+      document.getElementById('colorNuevaColumna').value = 'red';
+      document.getElementById('opcionesNuevaColumnaContainer').style.display = 'none';
+      document.getElementById('opcionesNuevaColumna').innerHTML = '';
+    }
+
+    // Cambiar tipo de columna
+    document.addEventListener('DOMContentLoaded', () => {
+      const tipoSelect = document.getElementById('tipoNuevaColumna');
+      if (tipoSelect) {
+        tipoSelect.addEventListener('change', (e) => {
+          const container = document.getElementById('opcionesNuevaColumnaContainer');
+          container.style.display = e.target.value === 'dropdown' ? 'block' : 'none';
+        });
+      }
+    });
+
+    function agregarOpcionNuevaColumna() {
+      const container = document.getElementById('opcionesNuevaColumna');
+      const div = document.createElement('div');
+      div.className = 'flex gap-2';
+      div.innerHTML = `
+        <input type="text" class="table-input flex-1" placeholder="Nueva opción" />
+        <button onclick="this.parentElement.remove()" class="btn-remove-option">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      `;
+      container.appendChild(div);
+    }
+
+    function crearNuevaColumna() {
+      const nombre = document.getElementById('nombreNuevaColumna').value.trim();
+      const tipo = document.getElementById('tipoNuevaColumna').value;
+      const color = document.getElementById('colorNuevaColumna').value;
+      
+      if (!nombre) {
+        alert('Por favor ingresa un nombre para la columna');
+        return;
+      }
+      
+      const id = nombre.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+      
+      // Verificar si ya existe
+      if (columnas.find(c => c.id === id)) {
+        alert('Ya existe una columna con ese nombre');
+        return;
+      }
+      
+      const nuevaColumna = {
+        id: id,
+        nombre: nombre.toUpperCase(),
+        tipo: tipo,
+        color: color === 'none' ? null : color,
+        width: 150,
+        orden: columnas.length
+      };
+      
+      // Si es dropdown, obtener opciones
+      if (tipo === 'dropdown') {
+        const inputs = document.querySelectorAll('#opcionesNuevaColumna input');
+        const ops = Array.from(inputs)
+          .map(input => input.value.trim())
+          .filter(v => v);
+        
+        if (ops.length === 0) {
+          alert('Agrega al menos una opción para el dropdown');
+          return;
+        }
+        
+        opciones[id] = ops;
+      }
+      
+      columnas.push(nuevaColumna);
+      
+      // Agregar campo vacío a todos los postulantes existentes
+      postulantes.forEach(p => {
+        p[id] = '';
+      });
+      
+      cerrarModalColumna();
+      renderizarEncabezados();
+      renderizarTabla();
+      mostrarNotificacion('Columna creada exitosamente', 'success');
+    }
+
+    function eliminarColumna(colId) {
+      const col = columnas.find(c => c.id === colId);
+      if (!col) return;
+      
+      if (confirm(`¿Estás seguro de eliminar la columna "${col.nombre}"?`)) {
+        columnas = columnas.filter(c => c.id !== colId);
+        delete opciones[colId];
+        
+        // Eliminar datos de postulantes
+        postulantes.forEach(p => {
+          delete p[colId];
+        });
+        
+        renderizarEncabezados();
+        renderizarTabla();
+        mostrarNotificacion('Columna eliminada', 'success');
+      }
+    }
+
+    function cerrarModalColumna() {
+      document.getElementById('modalNuevaColumna').classList.remove('active');
+    }
+
+    // ===== FUNCIONES DE OPCIONES =====
+
+    function editarOpciones(colId) {
+      const col = columnas.find(c => c.id === colId);
+      if (!col) return;
+      
+      if (col.tipo !== 'dropdown') {
+        mostrarNotificacion('Esta columna no tiene opciones editables', 'error');
+        return;
+      }
+      
+      currentEditingField = colId;
+      document.getElementById('modalTitle').textContent = `Editar Opciones - ${col.nombre}`;
+      
+      const container = document.getElementById('opcionesContainer');
+      container.innerHTML = '';
+      
+      const currentOpciones = opciones[colId] || [];
+      currentOpciones.forEach((opcion, index) => {
+        const div = document.createElement('div');
+        div.className = 'option-item';
+        div.innerHTML = `
+          <input type="text" value="${opcion}" data-index="${index}" />
+          <button class="btn-remove-option" onclick="eliminarOpcion(${index})">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        `;
+        container.appendChild(div);
+      });
+      
+      document.getElementById('modalOpciones').classList.add('active');
+    }
+
+    function agregarOpcion() {
+      const container = document.getElementById('opcionesContainer');
+      const currentOpciones = opciones[currentEditingField] || [];
+      
+      const div = document.createElement('div');
+      div.className = 'option-item';
+      div.innerHTML = `
+        <input type="text" value="" data-index="${currentOpciones.length}" placeholder="Nueva opción" />
+        <button class="btn-remove-option" onclick="this.parentElement.remove()">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      `;
+      container.appendChild(div);
+    }
+
+    function eliminarOpcion(index) {
+      const items = document.querySelectorAll('#opcionesContainer .option-item');
+      if (items[index]) {
+        items[index].remove();
+      }
+    }
+
+    function guardarOpciones() {
+      const inputs = document.querySelectorAll('#opcionesContainer input');
+      const nuevasOpciones = Array.from(inputs)
+        .map(input => input.value.trim())
+        .filter(value => value);
+      
+      if (nuevasOpciones.length === 0) {
+        alert('Debes tener al menos una opción');
+        return;
+      }
+      
+      opciones[currentEditingField] = nuevasOpciones;
+      cerrarModal();
+      renderizarTabla();
+      mostrarNotificacion('Opciones actualizadas', 'success');
+    }
+
+    function cerrarModal() {
+      document.getElementById('modalOpciones').classList.remove('active');
+      currentEditingField = null;
+    }
+
+    // ===== FUNCIONES DE FILAS =====
+
+    function crearSelect(colId, valorInicial = '') {
+      const ops = opciones[colId] || [];
+      let html = `<select class="table-select" data-col="${colId}">`;
+      html += `<option value="">Seleccionar...</option>`;
+      ops.forEach(opcion => {
+        const selected = opcion === valorInicial ? 'selected' : '';
+        html += `<option value="${opcion}" ${selected}>${opcion}</option>`;
+      });
+      html += '</select>';
+      return html;
+    }
+
+    function crearCampo(col, valor = '') {
+      const colId = col.id;
+      const width = col.width;
+      
+      if (col.tipo === 'dropdown') {
+        return crearSelect(colId, valor);
+      } else if (col.tipo === 'textarea') {
+        return `<textarea class="table-textarea" data-col="${colId}" rows="2" maxlength="200">${valor}</textarea>`;
+      } else if (col.tipo === 'date') {
+        return `<input type="date" class="table-input" data-col="${colId}" value="${valor}" />`;
+      } else {
+        const readonly = col.readonly ? 'readonly' : '';
+        return `<input type="text" class="table-input" data-col="${colId}" value="${valor}" ${readonly} />`;
+      }
+    }
+
+    function agregarFila() {
+      const timestamp = Date.now();
+      const nuevaFila = { id: timestamp };
+      
+      columnas.forEach(col => {
+        if (col.id === 'cliente') {
+          nuevaFila[col.id] = requerimientoActual.cliente;
+        } else {
+          nuevaFila[col.id] = '';
+        }
+      });
+      
+      postulantes.push(nuevaFila);
+      renderizarTabla();
+    }
+
+    function eliminarFila(id) {
+      if (confirm('¿Estás seguro de eliminar esta fila?')) {
+        postulantes = postulantes.filter(p => p.id !== id);
+        renderizarTabla();
+      }
+    }
+
+    function renderizarTabla() {
+      const tbody = document.getElementById('tablaBody');
+      tbody.innerHTML = '';
+      
+      if (postulantes.length === 0) {
+        const columnasOrdenadas = [...columnas].sort((a, b) => a.orden - b.orden);
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="${columnasOrdenadas.length + 1}" class="text-center text-slate-400 py-8">
+              No hay postulantes registrados. Haz clic en "Agregar Fila" para comenzar.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      const columnasOrdenadas = [...columnas].sort((a, b) => a.orden - b.orden);
+      
+      postulantes.forEach((postulante, rowIndex) => {
+        const fila = document.createElement('tr');
+        
+        columnasOrdenadas.forEach((col, colIndex) => {
+          const colorClass = col.color ? `col-${col.color}` : '';
+          const valor = postulante[col.id] || '';
+          
+          const td = document.createElement('td');
+          td.className = colorClass;
+          td.dataset.colId = col.id;
+          td.dataset.rowIndex = rowIndex;
+          td.style.width = `${col.width}px`;
+          td.style.minWidth = `${col.width}px`;
+          td.style.maxWidth = `${col.width}px`;
+          td.innerHTML = crearCampo(col, valor);
+          
+          fila.appendChild(td);
+        });
+        
+        const tdAcciones = document.createElement('td');
+        tdAcciones.innerHTML = `
+          <button onclick="eliminarFila(${postulante.id})" class="btn-delete px-3 py-2 rounded-lg text-xs font-semibold">
+            Eliminar
+          </button>
+        `;
+        fila.appendChild(tdAcciones);
+        
+        tbody.appendChild(fila);
+      });
+    }
+
+    // ===== FUNCIONES DE GUARDADO =====
+
+    function guardarCambios() {
+      // Recopilar datos de la tabla
+      document.querySelectorAll('#tablaBody tr').forEach((tr, rowIndex) => {
+        if (postulantes[rowIndex]) {
+          const inputs = tr.querySelectorAll('select, input, textarea');
+          inputs.forEach(input => {
+            const colId = input.dataset.col;
+            if (colId) {
+              postulantes[rowIndex][colId] = input.value;
+            }
+          });
+        }
+      });
+      
+      // Guardar en localStorage
+      const key = `borrador_${requerimientoActual.codigo}`;
+      localStorage.setItem(key, JSON.stringify(postulantes));
+      localStorage.setItem(`columnas_${requerimientoActual.codigo}`, JSON.stringify(columnas));
+      localStorage.setItem(`opciones_${requerimientoActual.codigo}`, JSON.stringify(opciones));
+      
+      mostrarNotificacion('Cambios guardados exitosamente', 'success');
+    }
+
+    function mostrarNotificacion(mensaje, tipo) {
+      const color = tipo === 'success' ? 'bg-green-500' : 'bg-red-500';
+      const notif = document.createElement('div');
+      notif.className = `fixed top-24 right-6 ${color} text-white px-6 py-3 rounded-xl shadow-lg z-50 font-semibold text-sm`;
+      notif.textContent = mensaje;
+      document.body.appendChild(notif);
+      
+      setTimeout(() => {
+        notif.remove();
+      }, 3000);
+    }
+
+    // ===== CARGA INICIAL =====
+
+    function cargarDatos() {
+      const codigoRequerimiento = sessionStorage.getItem('requerimientoActual');
+      if (codigoRequerimiento) {
+        requerimientoActual.codigo = codigoRequerimiento;
+        document.getElementById('tituloRequerimiento').textContent = `Seguimiento Borrador - ${codigoRequerimiento}`;
+        document.getElementById('infoRequerimiento').textContent = `Cliente: ${requerimientoActual.cliente}`;
+      }
+      
+      const key = `borrador_${requerimientoActual.codigo}`;
+      const columnasKey = `columnas_${requerimientoActual.codigo}`;
+      const opcionesKey = `opciones_${requerimientoActual.codigo}`;
+      
+      // Cargar columnas personalizadas
+      const columnasGuardadas = localStorage.getItem(columnasKey);
+      if (columnasGuardadas) {
+        columnas = JSON.parse(columnasGuardadas);
+      }
+      
+      // Cargar opciones personalizadas
+      const opcionesGuardadas = localStorage.getItem(opcionesKey);
+      if (opcionesGuardadas) {
+        opciones = JSON.parse(opcionesGuardadas);
+      }
+      
+      // Cargar postulantes
+      const datosGuardados = localStorage.getItem(key);
+      if (datosGuardados) {
+        postulantes = JSON.parse(datosGuardados);
+      } else {
+        postulantes = [
+          {
+            id: Date.now() - 2000,
+            reclutador: 'Estefanny Cullqui',
+            cliente: requerimientoActual.cliente,
+            unidad: 'CD Sur',
+            turno: '8 hrs',
+            horario: 'Diurno',
+            puesto: 'Agente de seguridad',
+            estadoProceso: 'Base final',
+            observacion: 'Candidato ideal, experiencia previa',
+            baseFinal: 'Titular',
+            tipoPostulante: 'Nuevo',
+            medioCaptacion: 'Computrabajo'
+          },
+          {
+            id: Date.now() - 1000,
+            reclutador: 'Ximena Paredes',
+            cliente: requerimientoActual.cliente,
+            unidad: 'CD Norte',
+            turno: '12 hrs',
+            horario: 'Nocturno',
+            puesto: 'Supervisor',
+            estadoProceso: 'En evaluación',
+            observacion: 'Pendiente de entrevista final',
+            baseFinal: 'No registrado',
+            tipoPostulante: 'Reingreso',
+            medioCaptacion: 'LinkedIn'
+          }
+        ];
+      }
+      
+      renderizarEncabezados();
+      renderizarTabla();
+    }
+
+    // Inicializar
+    window.addEventListener('load', () => {
+      const session = verificarAutenticacion();
+      if (session) {
+        cargarDatos();
+      }
+    });
+  </script>
+
+</body>
+</html>
