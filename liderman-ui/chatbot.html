@@ -6,67 +6,95 @@
   <title>Asistente Virtual | Liderman</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     
     body {
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-      background-attachment: fixed;
+      background: #0a0f1e;
       color: #fff;
       overflow: hidden;
     }
+
+    /* Gradiente animado de fondo */
+    .hero-gradient {
+      background: linear-gradient(135deg, 
+        #0a0f1e 0%, 
+        #111827 25%,
+        #1e293b 50%,
+        #0f172a 75%,
+        #0a0f1e 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+    }
     
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    /* Burbujas de chat minimalistas */
     .bubble {
-      max-width: 80%;
-      padding: 1rem 1.5rem;
-      border-radius: 18px;
-      margin: 0.5rem;
-      line-height: 1.5;
-      animation: fadeInUp 0.4s ease;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      max-width: 75%;
+      padding: 1rem 1.25rem;
+      border-radius: 16px;
+      margin: 0.5rem 0;
+      line-height: 1.6;
+      animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 0.9rem;
+      font-weight: 400;
     }
     
     .bot-bubble {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.1));
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      border-left: 4px solid #3b82f6;
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.15);
       align-self: flex-start;
+      backdrop-filter: blur(10px);
+      color: #e2e8f0;
     }
     
     .user-bubble {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1));
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      border-right: 4px solid #10b981;
+      background: rgba(236, 72, 153, 0.12);
+      border: 1px solid rgba(236, 72, 153, 0.2);
       align-self: flex-end;
       text-align: right;
+      backdrop-filter: blur(10px);
+      color: #fce7f3;
     }
     
+    /* Indicador de escritura minimalista */
     .typing-indicator {
       display: flex;
-      gap: 4px;
-      padding: 1rem;
+      gap: 5px;
+      padding: 1rem 1.25rem;
     }
     
     .typing-dot {
-      width: 8px;
-      height: 8px;
-      background: #3b82f6;
+      width: 7px;
+      height: 7px;
+      background: #60a5fa;
       border-radius: 50%;
-      animation: typing 1.4s infinite;
+      animation: typing 1.4s ease-in-out infinite;
+      opacity: 0.4;
     }
     
     .typing-dot:nth-child(2) { animation-delay: 0.2s; }
     .typing-dot:nth-child(3) { animation-delay: 0.4s; }
     
     @keyframes typing {
-      0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
-      30% { opacity: 1; transform: translateY(-10px); }
+      0%, 60%, 100% { 
+        opacity: 0.3; 
+        transform: scale(1) translateY(0); 
+      }
+      30% { 
+        opacity: 1; 
+        transform: scale(1.2) translateY(-8px); 
+      }
     }
     
     @keyframes fadeInUp {
       from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(15px);
       }
       to {
         opacity: 1;
@@ -74,51 +102,183 @@
       }
     }
     
+    /* Progress bar elegante */
     .progress-bar {
-      height: 6px;
-      background: rgba(255, 255, 255, 0.1);
+      height: 3px;
+      background: rgba(255, 255, 255, 0.05);
       border-radius: 10px;
       overflow: hidden;
     }
     
     .progress-fill {
       height: 100%;
-      background: linear-gradient(90deg, #3b82f6, #60a5fa);
-      transition: width 0.3s ease;
+      background: linear-gradient(90deg, #ec4899, #3b82f6, #60a5fa);
+      background-size: 200% 100%;
+      animation: progressShine 2s ease-in-out infinite;
+      transition: width 0.5s ease;
+    }
+
+    @keyframes progressShine {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
     
+    /* Quick replies minimalistas */
     .quick-reply {
-      background: rgba(59, 130, 246, 0.1);
-      border: 1px solid rgba(59, 130, 246, 0.3);
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.2);
       backdrop-filter: blur(8px);
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 500;
+      color: #93c5fd;
     }
     
     .quick-reply:hover {
-      background: rgba(59, 130, 246, 0.2);
-      border-color: rgba(59, 130, 246, 0.5);
+      background: rgba(59, 130, 246, 0.15);
+      border-color: rgba(59, 130, 246, 0.4);
       transform: translateY(-2px);
+      color: #dbeafe;
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+    }
+
+    /* Header minimalista */
+    .chat-header {
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Avatar del bot */
+    .bot-avatar {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(236, 72, 153, 0.2));
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
+    }
+
+    /* Botones CTA mejorados */
+    .btn-cta {
+      background: linear-gradient(135deg, #ec4899 0%, #f43f5e 50%, #3b82f6 100%);
+      background-size: 200% 200%;
+      box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .btn-cta:hover::before {
+      left: 100%;
+    }
+
+    .btn-cta:hover {
+      background-position: 100% 50%;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(236, 72, 153, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(100, 116, 139, 0.1);
+      border: 1px solid rgba(100, 116, 139, 0.2);
+      color: #94a3b8;
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(100, 116, 139, 0.15);
+      border-color: rgba(100, 116, 139, 0.3);
+      color: #cbd5e1;
+    }
+
+    /* Card de información */
+    .info-card {
+      background: rgba(59, 130, 246, 0.06);
+      border: 1px solid rgba(59, 130, 246, 0.15);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .info-card-title {
+      color: #60a5fa;
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.025em;
+    }
+
+    .info-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .info-card li {
+      padding: 0.4rem 0;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      font-weight: 400;
+    }
+
+    /* Scrollbar personalizado */
+    #chat::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #chat::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    #chat::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.3);
+      border-radius: 10px;
+    }
+
+    #chat::-webkit-scrollbar-thumb:hover {
+      background: rgba(59, 130, 246, 0.5);
     }
   </style>
 </head>
-<body class="flex flex-col h-screen">
+<body class="flex flex-col h-screen hero-gradient">
 
   <!-- Header con progress -->
-  <header class="bg-gradient-to-r from-blue-900/50 to-blue-800/50 backdrop-blur-md border-b border-white/10">
-    <div class="max-w-4xl mx-auto p-4">
-      <div class="flex justify-between items-center mb-3">
+  <header class="chat-header">
+    <div class="max-w-4xl mx-auto px-6 py-5">
+      <div class="flex justify-between items-center mb-5">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="bot-avatar w-11 h-11 rounded-2xl flex items-center justify-center backdrop-blur-xl">
+            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
             </svg>
           </div>
           <div>
-            <h1 class="text-lg font-bold">Asistente Virtual Liderman</h1>
-            <p class="text-xs text-gray-400">Paso 2 de 3 · En línea</p>
+            <h1 class="text-base font-semibold text-white">Asistente Liderman</h1>
+            <div class="flex items-center gap-2 text-xs text-slate-400 font-light">
+              <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+              En línea · Paso <span class="font-semibold text-white">2</span> de 3
+            </div>
           </div>
         </div>
-        <a href="formulario.html" class="text-blue-400 hover:text-blue-300 text-sm">← Atrás</a>
+        <a href="formulario.html" class="text-blue-400 hover:text-blue-300 text-sm font-medium flex items-center gap-1 transition-all hover:gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+          Atrás
+        </a>
       </div>
       <div class="progress-bar">
         <div class="progress-fill" style="width: 66%"></div>
@@ -134,24 +294,24 @@
   </main>
 
   <!-- Quick Replies (aparecerán cuando sea necesario) -->
-  <div id="quickReplies" class="hidden max-w-4xl mx-auto w-full px-4 pb-4">
+  <div id="quickReplies" class="hidden max-w-4xl mx-auto w-full px-6 pb-4">
     <div class="flex flex-wrap gap-2 justify-center">
       <!-- Se llenarán dinámicamente -->
     </div>
   </div>
 
   <!-- Footer con CTA -->
-  <footer class="bg-gradient-to-r from-blue-950/40 to-blue-900/40 backdrop-blur-md border-t border-white/10 p-4">
+  <footer class="chat-header border-t border-white/5 px-6 py-5">
     <div class="max-w-4xl mx-auto flex flex-col sm:flex-row gap-3">
       <button id="btnInteresado" onclick="mostrarInteres()" 
-              class="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 px-6 py-3 rounded-xl font-semibold shadow-lg transition-all flex items-center justify-center gap-2">
+              class="btn-cta flex-1 px-6 py-4 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 text-sm relative z-10">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
         </svg>
         Estoy Interesado
       </button>
       <button onclick="window.location.href='landing.html'" 
-              class="sm:w-auto bg-gray-700 hover:bg-gray-600 px-6 py-3 rounded-xl font-semibold transition-all">
+              class="btn-secondary sm:w-auto px-6 py-4 rounded-xl font-medium transition-all text-sm">
         No, Gracias
       </button>
     </div>
@@ -218,10 +378,12 @@
       } else if (mensaje.tipo === 'info') {
         messageDiv.className = 'bubble bot-bubble';
         messageDiv.innerHTML = `
-          <div class="font-semibold mb-2 text-blue-300">${mensaje.titulo}</div>
-          <ul class="space-y-1">
-            ${mensaje.items.map(item => `<li class="text-sm">${item}</li>`).join('')}
-          </ul>
+          <div class="info-card">
+            <div class="info-card-title">${mensaje.titulo}</div>
+            <ul class="space-y-1">
+              ${mensaje.items.map(item => `<li>${item}</li>`).join('')}
+            </ul>
+          </div>
         `;
       }
       
@@ -255,11 +417,11 @@
 
     function mostrarQuickReplies(opciones) {
       quickRepliesDiv.innerHTML = `
-        <p class="text-center text-gray-400 text-sm mb-2">Respuestas rápidas:</p>
+        <p class="text-center text-slate-500 text-xs mb-3 font-light">Respuestas rápidas:</p>
         <div class="flex flex-wrap gap-2 justify-center">
           ${opciones.map(opcion => `
             <button onclick="responderQuick('${opcion}')" 
-                    class="quick-reply px-4 py-2 rounded-full text-sm font-medium">
+                    class="quick-reply px-5 py-2.5 rounded-xl text-sm font-medium">
               ${opcion}
             </button>
           `).join('')}
