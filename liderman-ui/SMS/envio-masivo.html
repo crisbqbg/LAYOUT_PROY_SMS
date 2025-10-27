@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Envío Masivo SMS | Liderman</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0f1e;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    .hero-gradient {
+      background: linear-gradient(135deg, 
+        #0a0f1e 0%, 
+        #111827 25%,
+        #1e293b 50%,
+        #0f172a 75%,
+        #0a0f1e 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      min-height: 100vh;
+    }
+    
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .navbar {
+      background: rgba(10, 15, 30, 0.6);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Upload Area */
+    .upload-area {
+      border: 2px dashed rgba(59, 130, 246, 0.3);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .upload-area:hover,
+    .upload-area.drag-over {
+      border-color: rgba(59, 130, 246, 0.6);
+      background: rgba(59, 130, 246, 0.05);
+    }
+
+    .upload-area.file-loaded {
+      border-color: rgba(16, 185, 129, 0.6);
+      background: rgba(16, 185, 129, 0.05);
+    }
+
+    /* Textarea */
+    .message-textarea {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      font-size: 0.875rem;
+      width: 100%;
+      min-height: 150px;
+      resize: vertical;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.3s;
+    }
+
+    .message-textarea:focus {
+      outline: none;
+      border-color: rgba(59, 130, 246, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Character counter */
+    .char-counter {
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+
+    .char-counter.warning {
+      color: #fbbf24;
+    }
+
+    .char-counter.danger {
+      color: #f87171;
+    }
+
+    /* Botones */
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-preview {
+      background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+      box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
+    }
+
+    .btn-preview:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(236, 72, 153, 0.4);
+    }
+
+    /* Badge */
+    .badge {
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .badge-success {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-info {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6 0%, #ec4899 100%);
+      transition: width 0.3s ease;
+      border-radius: 9999px;
+    }
+
+    /* Variables de mensaje */
+    .variable-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      color: #60a5fa;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .variable-chip:hover {
+      background: rgba(59, 130, 246, 0.3);
+      transform: scale(1.05);
+    }
+
+    /* Lista de contactos */
+    .contact-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .contact-item {
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .contact-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6 0%, #ec4899 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+
+    /* Scroll personalizado */
+    .contact-list::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .contact-list::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+    }
+
+    .contact-list::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.3);
+      border-radius: 10px;
+    }
+
+    .contact-list::-webkit-scrollbar-thumb:hover {
+      background: rgba(59, 130, 246, 0.5);
+    }
+  </style>
+</head>
+<body class="hero-gradient">
+
+  <!-- Navbar -->
+  <nav class="navbar fixed w-full top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-pink-500/20 flex items-center justify-center backdrop-blur-xl border border-white/10">
+            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-sm font-bold">Mensajería Masiva SMS</h1>
+            <p class="text-xs text-slate-400">Envía mensajes a múltiples destinatarios</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-4">
+          <button onclick="window.location.href='../reclutador/dashboard.html'" class="text-slate-400 hover:text-blue-400 text-sm font-medium transition-colors">
+            Dashboard
+          </button>
+          <button onclick="verHistorial()" class="text-slate-400 hover:text-blue-400 text-sm font-medium transition-colors">
+            Historial
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenido Principal -->
+  <main class="max-w-7xl mx-auto px-6 pt-24 pb-12">
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Panel Izquierdo - Configuración -->
+      <div class="lg:col-span-2 space-y-6">
+        
+        <!-- Carga de Excel -->
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-xl font-bold mb-4">
+            <span class="gradient-text">1. Cargar Lista de Contactos</span>
+          </h3>
+          
+          <div class="upload-area rounded-xl p-8 text-center" id="uploadArea">
+            <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" class="hidden" />
+            
+            <div id="uploadPlaceholder">
+              <svg class="w-16 h-16 mx-auto mb-4 text-blue-400 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+              </svg>
+              <p class="text-lg font-semibold mb-2">Arrastra tu archivo Excel aquí</p>
+              <p class="text-sm text-slate-400 mb-4">o haz clic para seleccionar</p>
+              <button onclick="document.getElementById('fileInput').click()" class="px-6 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-xl font-semibold text-sm transition-all">
+                Seleccionar Archivo
+              </button>
+              <p class="text-xs text-slate-500 mt-4">Formatos: .xlsx, .xls, .csv</p>
+            </div>
+            
+            <div id="fileInfo" class="hidden">
+              <svg class="w-16 h-16 mx-auto mb-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <p class="text-lg font-semibold mb-2" id="fileName"></p>
+              <p class="text-sm text-slate-400 mb-4">
+                <span id="contactCount">0</span> contactos cargados
+              </p>
+              <button onclick="cambiarArchivo()" class="px-6 py-2 bg-slate-700/50 hover:bg-slate-700 text-white rounded-xl font-semibold text-sm transition-all">
+                Cambiar Archivo
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+            <p class="text-sm text-blue-300">
+              <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <strong>Importante:</strong> El archivo debe contener una columna llamada "TELEFONO" o "NUMERO" con los números de teléfono.
+            </p>
+          </div>
+        </div>
+
+        <!-- Mensaje Personalizado -->
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-xl font-bold mb-4">
+            <span class="gradient-text">2. Redactar Mensaje</span>
+          </h3>
+          
+          <div class="mb-4">
+            <label class="block text-sm text-slate-400 mb-2">Variables disponibles:</label>
+            <div class="flex flex-wrap gap-2">
+              <span class="variable-chip" onclick="insertarVariable('{NOMBRE}')">
+                {NOMBRE}
+              </span>
+              <span class="variable-chip" onclick="insertarVariable('{APELLIDO}')">
+                {APELLIDO}
+              </span>
+              <span class="variable-chip" onclick="insertarVariable('{DNI}')">
+                {DNI}
+              </span>
+              <span class="variable-chip" onclick="insertarVariable('{PUESTO}')">
+                {PUESTO}
+              </span>
+              <span class="variable-chip" onclick="insertarVariable('{EMPRESA}')">
+                {EMPRESA}
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 mt-2">Haz clic para insertar en el mensaje</p>
+          </div>
+
+          <textarea 
+            id="messageText" 
+            class="message-textarea" 
+            placeholder="Escribe tu mensaje aquí... Ejemplo:&#10;&#10;Hola {NOMBRE}, te contactamos de Liderman. Hemos revisado tu postulación para {PUESTO} y nos gustaría coordinar una entrevista. ¿Cuándo tendrías disponibilidad?"
+            oninput="actualizarContador()"
+          ></textarea>
+          
+          <div class="flex justify-between items-center mt-2">
+            <span class="char-counter" id="charCounter">0 / 160 caracteres</span>
+            <span class="text-xs text-slate-500" id="smsCount">1 SMS</span>
+          </div>
+
+          <div class="mt-4 grid grid-cols-2 gap-4">
+            <button onclick="plantillasRapidas()" class="px-4 py-2 bg-slate-700/50 hover:bg-slate-700 text-white rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
+              </svg>
+              Plantillas
+            </button>
+            <button onclick="verVistaPrevia()" class="btn-preview px-4 py-2 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+              Vista Previa
+            </button>
+          </div>
+        </div>
+
+        <!-- Botón de Envío -->
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-xl font-bold mb-4">
+            <span class="gradient-text">3. Enviar Mensajes</span>
+          </h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="text-center">
+              <div class="text-3xl font-bold text-blue-400" id="totalDestinatarios">0</div>
+              <div class="text-sm text-slate-400">Destinatarios</div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl font-bold text-green-400" id="costoEstimado">S/ 0.00</div>
+              <div class="text-sm text-slate-400">Costo Estimado</div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl font-bold text-pink-400" id="tiempoEstimado">0 min</div>
+              <div class="text-sm text-slate-400">Tiempo Estimado</div>
+            </div>
+          </div>
+
+          <button onclick="enviarMensajes()" id="btnEnviar" class="btn-primary w-full py-4 rounded-xl font-bold text-base flex items-center justify-center gap-3" disabled>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+            </svg>
+            Enviar Mensajes Masivos
+          </button>
+
+          <div id="progressContainer" class="hidden mt-6">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-sm text-slate-400">Enviando mensajes...</span>
+              <span class="text-sm font-semibold text-blue-400" id="progressText">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <p class="text-xs text-slate-500 mt-2" id="progressDetail">Preparando envío...</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Panel Derecho - Resumen -->
+      <div class="space-y-6">
+        
+        <!-- Stats -->
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-bold mb-4">Resumen</h3>
+          
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-slate-400">Estado</span>
+              <span class="badge badge-info" id="estadoGeneral">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Configurando
+              </span>
+            </div>
+            
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-slate-400">Archivo</span>
+              <span class="text-sm font-semibold" id="archivoStatus">Sin cargar</span>
+            </div>
+            
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-slate-400">Mensaje</span>
+              <span class="text-sm font-semibold" id="mensajeStatus">Sin redactar</span>
+            </div>
+            
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-slate-400">Contactos válidos</span>
+              <span class="text-sm font-semibold text-green-400" id="contactosValidos">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lista de Contactos -->
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-bold mb-4">Contactos Cargados</h3>
+          
+          <div class="contact-list" id="contactList">
+            <div class="text-center py-8 text-slate-400 text-sm">
+              <svg class="w-12 h-12 mx-auto mb-3 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+              Carga un archivo para ver los contactos
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    let contactos = [];
+    let archivoNombre = '';
+
+    // Drag & Drop
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+
+    uploadArea.addEventListener('click', (e) => {
+      if (e.target.id !== 'fileInput') {
+        fileInput.click();
+      }
+    });
+
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('drag-over');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('drag-over');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('drag-over');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        procesarArchivo(files[0]);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        procesarArchivo(e.target.files[0]);
+      }
+    });
+
+    // Procesar archivo (simulado)
+    function procesarArchivo(file) {
+      archivoNombre = file.name;
+      
+      // Simulación de procesamiento
+      setTimeout(() => {
+        // Datos de ejemplo
+        contactos = [
+          { telefono: '987654321', nombre: 'Juan Pérez', dni: '12345678', puesto: 'Agente de Seguridad' },
+          { telefono: '912345678', nombre: 'María López', dni: '87654321', puesto: 'Supervisor' },
+          { telefono: '998877665', nombre: 'Carlos Ruiz', dni: '45678912', puesto: 'Agente de Seguridad' },
+          { telefono: '923456789', nombre: 'Ana Torres', dni: '78945612', puesto: 'Jefe de Operaciones' },
+          { telefono: '945678912', nombre: 'Luis Mendoza', dni: '32165498', puesto: 'Agente de Seguridad' }
+        ];
+        
+        mostrarArchivoInfo();
+        actualizarEstadisticas();
+        renderizarContactos();
+        validarFormulario();
+      }, 1000);
+    }
+
+    function mostrarArchivoInfo() {
+      document.getElementById('uploadPlaceholder').classList.add('hidden');
+      document.getElementById('fileInfo').classList.remove('hidden');
+      document.getElementById('fileName').textContent = archivoNombre;
+      document.getElementById('contactCount').textContent = contactos.length;
+      uploadArea.classList.add('file-loaded');
+      document.getElementById('archivoStatus').textContent = '✓ Cargado';
+      document.getElementById('archivoStatus').className = 'text-sm font-semibold text-green-400';
+    }
+
+    function cambiarArchivo() {
+      document.getElementById('uploadPlaceholder').classList.remove('hidden');
+      document.getElementById('fileInfo').classList.add('hidden');
+      uploadArea.classList.remove('file-loaded');
+      contactos = [];
+      fileInput.value = '';
+      actualizarEstadisticas();
+      renderizarContactos();
+      document.getElementById('archivoStatus').textContent = 'Sin cargar';
+      document.getElementById('archivoStatus').className = 'text-sm font-semibold';
+      validarFormulario();
+    }
+
+    // Renderizar contactos
+    function renderizarContactos() {
+      const container = document.getElementById('contactList');
+      
+      if (contactos.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-slate-400 text-sm">
+            <svg class="w-12 h-12 mx-auto mb-3 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+            Carga un archivo para ver los contactos
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      contactos.forEach((contacto, index) => {
+        const inicial = contacto.nombre ? contacto.nombre.charAt(0).toUpperCase() : '?';
+        const div = document.createElement('div');
+        div.className = 'contact-item';
+        div.innerHTML = `
+          <div class="contact-avatar">${inicial}</div>
+          <div class="flex-1">
+            <div class="font-semibold text-sm">${contacto.nombre || 'Sin nombre'}</div>
+            <div class="text-xs text-slate-400">${contacto.telefono}</div>
+          </div>
+          <div class="text-xs text-slate-500">${contacto.puesto || 'N/A'}</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // Insertar variable
+    function insertarVariable(variable) {
+      const textarea = document.getElementById('messageText');
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const text = textarea.value;
+      
+      textarea.value = text.substring(0, start) + variable + text.substring(end);
+      textarea.focus();
+      textarea.setSelectionRange(start + variable.length, start + variable.length);
+      
+      actualizarContador();
+    }
+
+    // Contador de caracteres
+    function actualizarContador() {
+      const text = document.getElementById('messageText').value;
+      const length = text.length;
+      const counter = document.getElementById('charCounter');
+      const smsCount = document.getElementById('smsCount');
+      
+      counter.textContent = `${length} / 160 caracteres`;
+      
+      if (length > 140) {
+        counter.classList.add('warning');
+      } else {
+        counter.classList.remove('warning');
+      }
+      
+      if (length > 160) {
+        counter.classList.add('danger');
+        counter.classList.remove('warning');
+      }
+      
+      const numSms = Math.ceil(length / 160) || 1;
+      smsCount.textContent = `${numSms} SMS`;
+      
+      document.getElementById('mensajeStatus').textContent = length > 0 ? '✓ Redactado' : 'Sin redactar';
+      document.getElementById('mensajeStatus').className = length > 0 ? 'text-sm font-semibold text-green-400' : 'text-sm font-semibold';
+      
+      validarFormulario();
+      actualizarEstadisticas();
+    }
+
+    // Actualizar estadísticas
+    function actualizarEstadisticas() {
+      const totalContactos = contactos.length;
+      const mensaje = document.getElementById('messageText').value;
+      const numSms = Math.ceil(mensaje.length / 160) || 1;
+      const costoPorSms = 0.15; // S/ 0.15 por SMS
+      const costoTotal = totalContactos * numSms * costoPorSms;
+      const tiempoEstimado = Math.ceil(totalContactos / 10); // 10 SMS por minuto
+      
+      document.getElementById('totalDestinatarios').textContent = totalContactos;
+      document.getElementById('costoEstimado').textContent = `S/ ${costoTotal.toFixed(2)}`;
+      document.getElementById('tiempoEstimado').textContent = `${tiempoEstimado} min`;
+      document.getElementById('contactosValidos').textContent = totalContactos;
+    }
+
+    // Validar formulario
+    function validarFormulario() {
+      const btnEnviar = document.getElementById('btnEnviar');
+      const mensaje = document.getElementById('messageText').value;
+      const tieneContactos = contactos.length > 0;
+      const tieneMensaje = mensaje.trim().length > 0;
+      
+      if (tieneContactos && tieneMensaje) {
+        btnEnviar.disabled = false;
+        document.getElementById('estadoGeneral').innerHTML = `
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Listo para enviar
+        `;
+        document.getElementById('estadoGeneral').className = 'badge badge-success';
+      } else {
+        btnEnviar.disabled = true;
+        document.getElementById('estadoGeneral').innerHTML = `
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Configurando
+        `;
+        document.getElementById('estadoGeneral').className = 'badge badge-info';
+      }
+    }
+
+    // Vista previa
+    function verVistaPrevia() {
+      if (contactos.length === 0) {
+        alert('Por favor carga un archivo con contactos primero');
+        return;
+      }
+      
+      const mensaje = document.getElementById('messageText').value;
+      if (!mensaje) {
+        alert('Por favor escribe un mensaje primero');
+        return;
+      }
+      
+      // Abrir vista previa en nueva ventana
+      window.open('vista-previa.html', '_blank', 'width=400,height=700');
+      
+      // Guardar mensaje en localStorage para la vista previa
+      localStorage.setItem('mensajePreview', mensaje);
+      localStorage.setItem('contactoPreview', JSON.stringify(contactos[0]));
+    }
+
+    // Plantillas rápidas
+    function plantillasRapidas() {
+      const plantillas = [
+        "Hola {NOMBRE}, te contactamos de Liderman. Hemos revisado tu postulación para {PUESTO}. ¿Tienes disponibilidad para una entrevista?",
+        "Estimado/a {NOMBRE}, tu proceso de selección para {PUESTO} en {EMPRESA} ha sido aprobado. Comunícate al 01-6304000 para coordinar.",
+        "Hola {NOMBRE}, recordatorio: Tu entrevista para {PUESTO} es mañana a las 10:00 AM. Confirma tu asistencia.",
+        "Bienvenido/a {NOMBRE} a Liderman. Tu documentación ha sido aprobada. Inicia el {EMPRESA}."
+      ];
+      
+      const seleccion = prompt('Selecciona una plantilla:\n\n' + 
+        plantillas.map((p, i) => `${i + 1}. ${p.substring(0, 60)}...`).join('\n\n') +
+        '\n\nIngresa el número (1-4):');
+      
+      if (seleccion && seleccion >= 1 && seleccion <= 4) {
+        document.getElementById('messageText').value = plantillas[seleccion - 1];
+        actualizarContador();
+      }
+    }
+
+    // Enviar mensajes
+    function enviarMensajes() {
+      if (!confirm(`¿Estás seguro de enviar mensajes a ${contactos.length} contactos?`)) {
+        return;
+      }
+      
+      const progressContainer = document.getElementById('progressContainer');
+      const btnEnviar = document.getElementById('btnEnviar');
+      
+      progressContainer.classList.remove('hidden');
+      btnEnviar.disabled = true;
+      
+      let progreso = 0;
+      const total = contactos.length;
+      
+      const interval = setInterval(() => {
+        progreso += Math.random() * 15;
+        if (progreso >= 100) {
+          progreso = 100;
+          clearInterval(interval);
+          
+          setTimeout(() => {
+            alert('✓ Mensajes enviados exitosamente!');
+            progressContainer.classList.add('hidden');
+            btnEnviar.disabled = false;
+          }, 500);
+        }
+        
+        document.getElementById('progressFill').style.width = `${progreso}%`;
+        document.getElementById('progressText').textContent = `${Math.round(progreso)}%`;
+        
+        const enviados = Math.floor((progreso / 100) * total);
+        document.getElementById('progressDetail').textContent = `Enviados ${enviados} de ${total} mensajes`;
+      }, 300);
+    }
+
+    function verHistorial() {
+      alert('Función de historial en desarrollo');
+    }
+  </script>
+
+</body>
+</html>
