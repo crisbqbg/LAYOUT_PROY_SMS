@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🗺️ Guía de Navegación - Sistema Liderman</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #fff;
+    }
+    
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(59, 130, 246, 0.3);
+      border-color: rgba(59, 130, 246, 0.5);
+    }
+    
+    .step-active {
+      border-color: #3b82f6;
+      background: rgba(59, 130, 246, 0.1);
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+      50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.8); }
+    }
+    
+    .pulse-glow {
+      animation: pulse-glow 2s infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+  <div class="max-w-6xl mx-auto">
+    
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">
+        🗺️ <span class="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+          Guía de Navegación
+        </span>
+      </h1>
+      <p class="text-xl text-gray-300 mb-6">Sistema de Reclutamiento SMS - Liderman</p>
+      
+      <div class="flex flex-wrap gap-3 justify-center">
+        <span class="badge bg-green-500/20 text-green-400 border border-green-500/30">5 Páginas Principales</span>
+        <span class="badge bg-blue-500/20 text-blue-400 border border-blue-500/30">2 Portales</span>
+        <span class="badge bg-purple-500/20 text-purple-400 border border-purple-500/30">100% Funcional</span>
+      </div>
+    </div>
+
+    <!-- Selector de Ruta -->
+    <div class="card rounded-3xl p-6 mb-8">
+      <h2 class="text-2xl font-bold mb-4 text-center">¿Qué quieres probar?</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <button onclick="mostrarRuta('postulante')" 
+                class="p-6 card rounded-2xl hover:bg-blue-500/10 transition-all">
+          <div class="text-4xl mb-3">👤</div>
+          <h3 class="text-xl font-bold mb-2">Soy Postulante</h3>
+          <p class="text-sm text-gray-400">Proceso completo de registro (5 pasos)</p>
+        </button>
+        
+        <button onclick="mostrarRuta('reclutador')" 
+                class="p-6 card rounded-2xl hover:bg-purple-500/10 transition-all">
+          <div class="text-4xl mb-3">👔</div>
+          <h3 class="text-xl font-bold mb-2">Soy Reclutador</h3>
+          <p class="text-sm text-gray-400">Panel de gestión de candidatos</p>
+        </button>
+      </div>
+    </div>
+
+    <!-- Ruta del Postulante -->
+    <div id="rutaPostulante" class="hidden">
+      <div class="card rounded-3xl p-8 mb-8">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-3xl font-bold">
+            🎯 Ruta del Postulante
+          </h2>
+          <button onclick="ocultarRutas()" class="text-gray-400 hover:text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          
+          <!-- Paso 1: Landing -->
+          <div class="card rounded-2xl p-6">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0">
+                <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-700 rounded-2xl flex items-center justify-center text-3xl">
+                  🏠
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                  <h3 class="text-xl font-bold">1. Landing Page</h3>
+                  <span class="badge bg-green-500/20 text-green-400">Inicio</span>
+                </div>
+                <p class="text-gray-400 text-sm mb-4">
+                  Página de bienvenida con opciones de acceso: Google OAuth, Manual o WhatsApp
+                </p>
+                <div class="flex flex-wrap gap-3">
+                  <a href="landing.html" target="_blank"
+                     class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-semibold transition pulse-glow">
+                    🚀 Abrir Landing
+                  </a>
+                  <button onclick="mostrarTip('landing')" 
+                          class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-semibold transition">
+                    💡 Ver Tips
+                  </button>
+                </div>
+                <div id="tip-landing" class="hidden mt-4 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg text-sm">
+                  <p class="font-semibold mb-2">📝 Qué hacer aquí:</p>
+                  <ul class="space-y-1 text-gray-300">
+                    <li>✓ Click en "📝 Ingresar Manualmente" para ir al formulario</li>
+                    <li>✓ O click en "Continuar con Google" (simulado)</li>
+                    <li>✓ Observa el diseño glassmorphism y animaciones</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Paso 2: Formulario -->
+          <div class="card rounded-2xl p-6">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center text-3xl">
+                  📝
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                  <h3 class="text-xl font-bold">2. Formulario de Registro</h3>
+                  <span class="badge bg-blue-500/20 text-blue-400">Paso 1/3</span>
+                </div>
+                <p class="text-gray-400 text-sm mb-4">
+                  Completa tus datos personales (9 campos con validación en tiempo real)
+                </p>
+                <div class="flex flex-wrap gap-3">
+                  <a href="formulario.html" target="_blank"
+                     class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-semibold transition">
+                    📝 Abrir Formulario
+                  </a>
+                  <button onclick="mostrarTip('formulario')" 
+                          class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-semibold transition">
+                    💡 Ver Tips
+                  </button>
+                  <button onclick="copiarDatosPrueba()" 
+                          class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-sm font-semibold transition">
+                    📋 Copiar Datos de Prueba
+                  </button>
+                </div>
+                <div id="tip-formulario" class="hidden mt-4 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg text-sm">
+                  <p class="font-semibold mb-2">📝 Datos de prueba:</p>
+                  <div class="grid md:grid-cols-2 gap-2 text-gray-300 font-mono text-xs">
+                    <div>Nombres: Juan Carlos</div>
+                    <div>Apellidos: Pérez Mendoza</div>
+                    <div>DNI: 61147505</div>
+                    <div>Teléfono: 930973745</div>
+                    <div>Edad: 25</div>
+                    <div>Estatura: 1.75</div>
+                    <div>Ciudad: Lima</div>
+                    <div>Distrito: San Juan de Miraflores</div>
+                    <div class="col-span-2">Email: juan.perez@gmail.com</div>
+                    <div class="col-span-2">Cargo: Agente de Seguridad</div>
+                  </div>
+                  <p class="mt-3 text-yellow-400">⚠️ Importante: Completa TODOS los campos antes de continuar</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Paso 3: Chatbot -->
+          <div class="card rounded-2xl p-6">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0">
+                <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl flex items-center justify-center text-3xl">
+                  🤖
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                  <h3 class="text-xl font-bold">3. Chatbot Asistente</h3>
+                  <span class="badge bg-purple-500/20 text-purple-400">Paso 2/3</span>
+                </div>
+                <p class="text-gray-400 text-sm mb-4">
+                  Interactúa con el asistente virtual, conoce los detalles del puesto y confirma tu interés
+                </p>
+                <div class="flex flex-wrap gap-3">
+                  <a href="chatbot.html" target="_blank"
+                     class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-semibold transition">
+                    🤖 Abrir Chatbot
+                  </a>
+                  <button onclick="mostrarTip('chatbot')" 
+                          class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-semibold transition">
+                    💡 Ver Tips
+                  </button>
+                </div>
+                <div id="tip-chatbot" class="hidden mt-4 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg text-sm">
+                  <p class="font-semibold mb-2">📝 Qué hacer aquí:</p>
+                  <ul class="space-y-1 text-gray-300">
+                    <li>✓ Espera a que el bot termine de escribir todos los mensajes</li>
+                    <li>✓ Usa las respuestas rápidas: Horarios, Beneficios, Requisitos, Ubicación</li>
+                    <li>✓ Click en "Estoy Interesado" cuando estés listo</li>
+                    <li>✓ Observa las animaciones de typing indicator</li>
+                  </ul>
+                  <p class="mt-3 text-yellow-400">⚠️ Debes completar el formulario primero</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Paso 4: Selección Reclutador -->
+          <div class="card rounded-2xl p-6">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0">
+                <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-700 rounded-2xl flex items-center justify-center text-3xl">
+                  👥
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                  <h3 class="text-xl font-bold">4. Selección de Reclutador</h3>
+                  <span class="badge bg-orange-500/20 text-orange-400">Paso 3/3</span>
+                </div>
+                <p class="text-gray-400 text-sm mb-4">
+                  Elige a tu reclutador preferido de la lista (6 reclutadores disponibles)
+                </p>
+                <div class="flex flex-wrap gap-3">
+                  <a href="seleccion-reclutador.html" target="_blank"
+                     class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-semibold transition">
+                    👥 Abrir Selección
+                  </a>
+                  <button onclick="mostrarTip('reclutador-sel')" 
+                          class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-semibold transition">
+                    💡 Ver Tips
+                  </button>
+                </div>
+                <div id="tip-reclutador-sel" class="hidden mt-4 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg text-sm">
+                  <p class="font-semibold mb-2">📝 Qué hacer aquí:</p>
+                  <ul class="space-y-1 text-gray-300">
+                    <li>✓ Click en cualquier card de reclutador DISPONIBLE (punto verde)</li>
+                    <li>✓ Revisa la experiencia y valoración de cada uno</li>
+                    <li>✓ Confirma tu selección en el botón verde</li>
+                    <li>✓ Los reclutadores ocupados/no disponibles no se pueden seleccionar</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Paso 5: Confirmación -->
+          <div class="card rounded-2xl p-6">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0">
+                <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-700 rounded-2xl flex items-center justify-center text-3xl">
+                  ✅
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                  <h3 class="text-xl font-bold">5. Confirmación Final</h3>
+                  <span class="badge bg-green-500/20 text-green-400">Completado</span>
+                </div>
+                <p class="text-gray-400 text-sm mb-4">
+                  ¡Registro exitoso! Ve el timeline del proceso y descarga tu comprobante
+                </p>
+                <div class="flex flex-wrap gap-3">
+                  <a href="confirmacion-final.html" target="_blank"
+                     class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-semibold transition">
+                    ✅ Abrir Confirmación
+                  </a>
+                  <button onclick="mostrarTip('confirmacion')" 
+                          class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-semibold transition">
+                    💡 Ver Tips
+                  </button>
+                </div>
+                <div id="tip-confirmacion" class="hidden mt-4 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg text-sm">
+                  <p class="font-semibold mb-2">📝 Qué hacer aquí:</p>
+                  <ul class="space-y-1 text-gray-300">
+                    <li>✓ Observa el confetti celebratorio</li>
+                    <li>✓ Revisa el timeline de 6 etapas del proceso</li>
+                    <li>✓ Click en "Descargar Comprobante" para obtener tu archivo .txt</li>
+                    <li>✓ Usa el botón de WhatsApp para contacto directo</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Ruta del Reclutador -->
+    <div id="rutaReclutador" class="hidden">
+      <div class="card rounded-3xl p-8 mb-8">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-3xl font-bold">
+            👔 Ruta del Reclutador
+          </h2>
+          <button onclick="ocultarRutas()" class="text-gray-400 hover:text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          
+          <!-- Login -->
+          <div class="card rounded-2xl p-6">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center text-3xl">
+                  🔐
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                  <h3 class="text-xl font-bold">1. Portal de Login</h3>
+                  <span class="badge bg-blue-500/20 text-blue-400">Acceso</span>
+                </div>
+                <p class="text-gray-400 text-sm mb-4">
+                  Inicia sesión con tus credenciales de reclutador
+                </p>
+                <div class="flex flex-wrap gap-3">
+                  <a href="index.html" target="_blank"
+                     class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-semibold transition pulse-glow">
+                    🔐 Abrir Login
+                  </a>
+                  <button onclick="mostrarTip('login-rec')" 
+                          class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-semibold transition">
+                    💡 Ver Credenciales
+                  </button>
+                </div>
+                <div id="tip-login-rec" class="hidden mt-4 p-4 bg-purple-500/10 border border-purple-500/30 rounded-lg text-sm">
+                  <p class="font-semibold mb-2">🔑 Credenciales:</p>
+                  <div class="bg-gray-900 p-3 rounded font-mono text-purple-400">
+                    Usuario: <strong>r123</strong><br>
+                    Contraseña: <strong>r123</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard -->
+          <div class="card rounded-2xl p-6">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0">
+                <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl flex items-center justify-center text-3xl">
+                  📊
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                  <h3 class="text-xl font-bold">2. Panel de Reclutador</h3>
+                  <span class="badge bg-purple-500/20 text-purple-400">Dashboard</span>
+                </div>
+                <p class="text-gray-400 text-sm mb-4">
+                  Gestiona y revisa todos los postulantes registrados
+                </p>
+                <div class="flex flex-wrap gap-3">
+                  <a href="reclutador.html" target="_blank"
+                     class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-semibold transition">
+                    📊 Abrir Dashboard
+                  </a>
+                  <button onclick="mostrarTip('dashboard')" 
+                          class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-semibold transition">
+                    💡 Ver Tips
+                  </button>
+                </div>
+                <div id="tip-dashboard" class="hidden mt-4 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg text-sm">
+                  <p class="font-semibold mb-2">📝 Qué hacer aquí:</p>
+                  <ul class="space-y-1 text-gray-300">
+                    <li>✓ Revisa la tabla de postulantes</li>
+                    <li>✓ Click en "Ver detalle" de cualquier postulante</li>
+                    <li>✓ Usa los botones de Aprobar/Rechazar</li>
+                    <li>✓ Observa los estados de cada candidato</li>
+                  </ul>
+                  <p class="mt-3 text-yellow-400">⚠️ Para ver postulantes, primero completa el flujo de registro</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Herramientas Adicionales -->
+    <div class="card rounded-3xl p-8 mb-8">
+      <h2 class="text-2xl font-bold mb-6">🔧 Herramientas y Extras</h2>
+      
+      <div class="grid md:grid-cols-2 gap-4">
+        
+        <a href="guia-navegacion.html" target="_blank" class="card rounded-2xl p-6 hover:bg-blue-500/10">
+          <div class="text-4xl mb-3">🗺️</div>
+          <h3 class="font-bold mb-2">Guía de Navegación</h3>
+          <p class="text-sm text-gray-400">Esta página - Mapa completo del sistema</p>
+        </a>
+
+        <button onclick="abrirConsola()" class="card rounded-2xl p-6 hover:bg-purple-500/10 text-left">
+          <div class="text-4xl mb-3">💻</div>
+          <h3 class="font-bold mb-2">Consola Dev</h3>
+          <p class="text-sm text-gray-400">Comandos de desarrollo (F12)</p>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Documentación -->
+    <div class="card rounded-3xl p-8">
+      <h2 class="text-2xl font-bold mb-6">📚 Documentación</h2>
+      
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="text-center p-4">
+          <div class="text-3xl mb-2">📖</div>
+          <h3 class="font-semibold mb-2">README.md</h3>
+          <p class="text-xs text-gray-400 mb-3">Documentación completa del proyecto</p>
+          <a href="README.md" download class="text-blue-400 hover:text-blue-300 text-sm">Descargar</a>
+        </div>
+        
+        <div class="text-center p-4">
+          <div class="text-3xl mb-2">📝</div>
+          <h3 class="font-semibold mb-2">RESUMEN.md</h3>
+          <p class="text-xs text-gray-400 mb-3">Resumen ejecutivo del proyecto</p>
+          <a href="RESUMEN.md" download class="text-blue-400 hover:text-blue-300 text-sm">Descargar</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function mostrarRuta(tipo) {
+      ocultarRutas();
+      if (tipo === 'postulante') {
+        document.getElementById('rutaPostulante').classList.remove('hidden');
+      } else if (tipo === 'reclutador') {
+        document.getElementById('rutaReclutador').classList.remove('hidden');
+      }
+      
+      // Scroll suave
+      setTimeout(() => {
+        window.scrollTo({ top: 300, behavior: 'smooth' });
+      }, 100);
+    }
+
+    function ocultarRutas() {
+      document.getElementById('rutaPostulante').classList.add('hidden');
+      document.getElementById('rutaReclutador').classList.add('hidden');
+    }
+
+    function mostrarTip(id) {
+      const tip = document.getElementById('tip-' + id);
+      if (tip.classList.contains('hidden')) {
+        // Ocultar todos los tips primero
+        document.querySelectorAll('[id^="tip-"]').forEach(t => t.classList.add('hidden'));
+        tip.classList.remove('hidden');
+      } else {
+        tip.classList.add('hidden');
+      }
+    }
+
+    function copiarDatosPrueba() {
+      const datos = `Nombres: Juan Carlos
+Apellidos: Pérez Mendoza
+DNI: 61147505
+Teléfono: 930973745
+Edad: 25
+Estatura: 1.75
+Ciudad: Lima
+Distrito: San Juan de Miraflores
+Email: juan.perez@gmail.com
+Cargo: Agente de Seguridad`;
+      
+      navigator.clipboard.writeText(datos).then(() => {
+        alert('✅ Datos copiados al portapapeles!\n\nAhora puedes pegarlos en el formulario.');
+      }).catch(() => {
+        alert('📋 Datos de prueba:\n\n' + datos);
+      });
+    }
+
+    function abrirConsola() {
+      alert('💻 Abre la Consola del Navegador (F12) y usa:\n\n' +
+            '• verStorage() - Ver datos almacenados\n' +
+            '• limpiarStorage() - Limpiar todos los datos\n\n' +
+            'También puedes inspeccionar elementos y ver el código.');
+      console.log('%c🚀 Sistema Liderman SMS', 'font-size: 20px; color: #3b82f6; font-weight: bold');
+      console.log('%c📋 Comandos disponibles:', 'font-size: 14px; color: #10b981');
+      console.log('• verStorage() - Ver todos los datos');
+      console.log('• limpiarStorage() - Limpiar datos de prueba');
+    }
+
+    // Animación de entrada
+    window.addEventListener('load', () => {
+      console.log('🗺️ Guía de Navegación cargada');
+      console.log('💡 Tip: Abre las herramientas de desarrollo (F12) para más opciones');
+    });
+  </script>
+
+</body>
+</html>

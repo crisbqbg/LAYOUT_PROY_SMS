@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selección de Reclutador | Liderman</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      background-attachment: fixed;
+      color: #fff;
+    }
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      transition: all 0.3s ease;
+    }
+    
+    .glass-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px 0 rgba(59, 130, 246, 0.2);
+    }
+    
+    .progress-bar {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      transition: width 0.3s ease;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .badge-success {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    
+    .badge-busy {
+      background: rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    
+    .badge-offline {
+      background: rgba(107, 114, 128, 0.2);
+      color: #9ca3af;
+      border: 1px solid rgba(107, 114, 128, 0.3);
+    }
+    
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+    
+    .status-online {
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+      animation: pulse 2s infinite;
+    }
+    
+    .status-busy {
+      background: #f59e0b;
+    }
+    
+    .status-offline {
+      background: #6b7280;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(59, 130, 246, 0.3);
+    }
+    
+    .selected-card {
+      border-color: #3b82f6 !important;
+      box-shadow: 0 0 30px rgba(59, 130, 246, 0.5) !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+  <!-- Header con progress -->
+  <div class="max-w-6xl mx-auto mb-6">
+    <div class="flex justify-between items-center mb-4">
+      <a href="chatbot.html" class="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-2 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Volver
+      </a>
+      <span class="text-gray-400 text-sm">Paso 3 de 3</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" style="width: 100%"></div>
+    </div>
+  </div>
+
+  <!-- Contenido Principal -->
+  <div class="max-w-6xl mx-auto">
+    
+    <!-- Header -->
+    <div class="glass-card rounded-3xl p-8 mb-8 text-center">
+      <div class="mb-4">
+        <svg class="w-16 h-16 mx-auto text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-bold mb-3">
+        <span class="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+          Selecciona tu Reclutador
+        </span>
+      </h1>
+      <p class="text-gray-300 max-w-2xl mx-auto">
+        Elige al reclutador con quien te gustaría continuar tu proceso de selección. Todos son especialistas en el área.
+      </p>
+    </div>
+
+    <!-- Grid de Reclutadores -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      
+      <!-- Reclutador 1 -->
+      <div class="glass-card rounded-2xl p-6 cursor-pointer reclutador-card" 
+           onclick="seleccionarReclutador(1, 'María González')">
+        <div class="flex flex-col items-center text-center">
+          <div class="relative mb-4">
+            <img src="img/avatar1.jpg" alt="María González" class="avatar">
+            <span class="status-dot status-online absolute bottom-0 right-0"></span>
+          </div>
+          
+          <h3 class="text-xl font-bold mb-1">María González</h3>
+          <p class="text-blue-400 text-sm mb-3">Reclutadora Senior</p>
+          
+          <div class="mb-4">
+            <span class="badge badge-success">
+              <span class="status-dot status-online"></span>
+              Disponible
+            </span>
+          </div>
+          
+          <div class="w-full space-y-2 text-sm text-gray-400">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span>5 años de experiencia</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+              <span>120+ contrataciones</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+              <span>4.9/5 valoración</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reclutador 2 -->
+      <div class="glass-card rounded-2xl p-6 cursor-pointer reclutador-card" 
+           onclick="seleccionarReclutador(2, 'Carlos Ramírez')">
+        <div class="flex flex-col items-center text-center">
+          <div class="relative mb-4">
+            <img src="img/avatar1.jpg" alt="Carlos Ramírez" class="avatar">
+            <span class="status-dot status-online absolute bottom-0 right-0"></span>
+          </div>
+          
+          <h3 class="text-xl font-bold mb-1">Carlos Ramírez</h3>
+          <p class="text-blue-400 text-sm mb-3">Reclutador</p>
+          
+          <div class="mb-4">
+            <span class="badge badge-success">
+              <span class="status-dot status-online"></span>
+              Disponible
+            </span>
+          </div>
+          
+          <div class="w-full space-y-2 text-sm text-gray-400">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span>3 años de experiencia</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+              <span>85+ contrataciones</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+              <span>4.8/5 valoración</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reclutador 3 -->
+      <div class="glass-card rounded-2xl p-6 cursor-pointer reclutador-card" 
+           onclick="seleccionarReclutador(3, 'Ana Flores')">
+        <div class="flex flex-col items-center text-center">
+          <div class="relative mb-4">
+            <img src="img/avatar1.jpg" alt="Ana Flores" class="avatar">
+            <span class="status-dot status-busy absolute bottom-0 right-0"></span>
+          </div>
+          
+          <h3 class="text-xl font-bold mb-1">Ana Flores</h3>
+          <p class="text-blue-400 text-sm mb-3">Reclutadora</p>
+          
+          <div class="mb-4">
+            <span class="badge badge-busy">
+              <span class="status-dot status-busy"></span>
+              Ocupada
+            </span>
+          </div>
+          
+          <div class="w-full space-y-2 text-sm text-gray-400">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span>4 años de experiencia</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+              <span>95+ contrataciones</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+              <span>4.7/5 valoración</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reclutador 4 -->
+      <div class="glass-card rounded-2xl p-6 cursor-pointer reclutador-card" 
+           onclick="seleccionarReclutador(4, 'Luis Torres')">
+        <div class="flex flex-col items-center text-center">
+          <div class="relative mb-4">
+            <img src="img/avatar1.jpg" alt="Luis Torres" class="avatar">
+            <span class="status-dot status-online absolute bottom-0 right-0"></span>
+          </div>
+          
+          <h3 class="text-xl font-bold mb-1">Luis Torres</h3>
+          <p class="text-blue-400 text-sm mb-3">Reclutador Senior</p>
+          
+          <div class="mb-4">
+            <span class="badge badge-success">
+              <span class="status-dot status-online"></span>
+              Disponible
+            </span>
+          </div>
+          
+          <div class="w-full space-y-2 text-sm text-gray-400">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span>6 años de experiencia</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+              <span>150+ contrataciones</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+              <span>5.0/5 valoración</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reclutador 5 -->
+      <div class="glass-card rounded-2xl p-6 cursor-pointer reclutador-card" 
+           onclick="seleccionarReclutador(5, 'Patricia Mendoza')">
+        <div class="flex flex-col items-center text-center">
+          <div class="relative mb-4">
+            <img src="img/avatar1.jpg" alt="Patricia Mendoza" class="avatar">
+            <span class="status-dot status-offline absolute bottom-0 right-0"></span>
+          </div>
+          
+          <h3 class="text-xl font-bold mb-1">Patricia Mendoza</h3>
+          <p class="text-blue-400 text-sm mb-3">Reclutadora</p>
+          
+          <div class="mb-4">
+            <span class="badge badge-offline">
+              <span class="status-dot status-offline"></span>
+              No disponible
+            </span>
+          </div>
+          
+          <div class="w-full space-y-2 text-sm text-gray-400">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span>2 años de experiencia</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+              <span>60+ contrataciones</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+              <span>4.6/5 valoración</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reclutador 6 -->
+      <div class="glass-card rounded-2xl p-6 cursor-pointer reclutador-card" 
+           onclick="seleccionarReclutador(6, 'Jorge Vargas')">
+        <div class="flex flex-col items-center text-center">
+          <div class="relative mb-4">
+            <img src="img/avatar1.jpg" alt="Jorge Vargas" class="avatar">
+            <span class="status-dot status-online absolute bottom-0 right-0"></span>
+          </div>
+          
+          <h3 class="text-xl font-bold mb-1">Jorge Vargas</h3>
+          <p class="text-blue-400 text-sm mb-3">Reclutador</p>
+          
+          <div class="mb-4">
+            <span class="badge badge-success">
+              <span class="status-dot status-online"></span>
+              Disponible
+            </span>
+          </div>
+          
+          <div class="w-full space-y-2 text-sm text-gray-400">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span>3 años de experiencia</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+              <span>75+ contrataciones</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+              <span>4.8/5 valoración</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Botón de confirmación (aparece al seleccionar) -->
+    <div id="confirmSection" class="hidden glass-card rounded-2xl p-6 text-center">
+      <p class="text-gray-300 mb-4">
+        Has seleccionado a <strong id="reclutadorNombre" class="text-blue-400"></strong> como tu reclutador
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button onclick="confirmarSeleccion()" 
+                class="px-8 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 rounded-xl font-semibold shadow-lg transition-all">
+          ✓ Confirmar y Continuar
+        </button>
+        <button onclick="cancelarSeleccion()" 
+                class="px-8 py-3 bg-gray-700 hover:bg-gray-600 rounded-xl font-semibold transition-all">
+          Cambiar Reclutador
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center py-8 mt-8 text-gray-500 text-sm">
+    <p>© 2025 Liderman | Reclutamiento & Selección</p>
+  </footer>
+
+  <script>
+    let reclutadorSeleccionadoId = null;
+    let reclutadorSeleccionadoNombre = '';
+
+    function seleccionarReclutador(id, nombre) {
+      // Remover selección anterior
+      document.querySelectorAll('.reclutador-card').forEach(card => {
+        card.classList.remove('selected-card');
+      });
+      
+      // Agregar selección actual
+      event.currentTarget.classList.add('selected-card');
+      
+      reclutadorSeleccionadoId = id;
+      reclutadorSeleccionadoNombre = nombre;
+      
+      // Mostrar sección de confirmación
+      document.getElementById('reclutadorNombre').textContent = nombre;
+      document.getElementById('confirmSection').classList.remove('hidden');
+      
+      // Scroll suave a la sección de confirmación
+      document.getElementById('confirmSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function cancelarSeleccion() {
+      document.querySelectorAll('.reclutador-card').forEach(card => {
+        card.classList.remove('selected-card');
+      });
+      document.getElementById('confirmSection').classList.add('hidden');
+      reclutadorSeleccionadoId = null;
+      reclutadorSeleccionadoNombre = '';
+    }
+
+    function confirmarSeleccion() {
+      if (!reclutadorSeleccionadoId) {
+        alert('⚠️ Por favor, selecciona un reclutador primero');
+        return;
+      }
+
+      // Obtener datos del postulante
+      const postulanteData = JSON.parse(sessionStorage.getItem('postulanteData') || '{}');
+      
+      // Crear registro completo
+      const registro = {
+        ...postulanteData,
+        reclutadorId: reclutadorSeleccionadoId,
+        reclutadorNombre: reclutadorSeleccionadoNombre,
+        fechaContacto: new Date().toISOString(),
+        estado: 'Nuevo interesado',
+        proceso: 'Verificación'
+      };
+
+      // Guardar en localStorage (simular base de datos)
+      let registros = JSON.parse(localStorage.getItem('registros') || '[]');
+      registros.push(registro);
+      localStorage.setItem('registros', JSON.stringify(registros));
+
+      // Guardar registro actual
+      sessionStorage.setItem('registroCompleto', JSON.stringify(registro));
+
+      // Mostrar loading
+      const btn = event.target;
+      btn.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+      btn.disabled = true;
+
+      // Redirigir a confirmación final
+      setTimeout(() => {
+        window.location.href = 'confirmacion-final.html';
+      }, 1500);
+    }
+
+    // Verificar que el usuario haya completado pasos anteriores
+    window.addEventListener('load', () => {
+      const postulanteData = JSON.parse(sessionStorage.getItem('postulanteData') || '{}');
+      const interesConfirmado = sessionStorage.getItem('interesConfirmado');
+      
+      if (!postulanteData.nombres || !interesConfirmado) {
+        alert('⚠️ Debes completar los pasos anteriores primero');
+        window.location.href = 'landing.html';
+      }
+    });
+  </script>
+
+</body>
+</html>

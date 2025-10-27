@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¡Registro Exitoso! | Liderman</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      background-attachment: fixed;
+      color: #fff;
+    }
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+    
+    @keyframes checkmark {
+      0% {
+        stroke-dashoffset: 100;
+      }
+      100% {
+        stroke-dashoffset: 0;
+      }
+    }
+    
+    @keyframes scaleIn {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    .checkmark-circle {
+      animation: scaleIn 0.5s ease-out;
+    }
+    
+    .checkmark-check {
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      animation: checkmark 0.5s 0.3s ease-out forwards;
+    }
+    
+    .step {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+    
+    .step.active {
+      background: rgba(59, 130, 246, 0.1);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+    
+    .step.completed {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .fade-in-up {
+      animation: fadeInUp 0.6s ease-out;
+    }
+    
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: #3b82f6;
+      position: absolute;
+      animation: confetti-fall 3s linear;
+    }
+    
+    @keyframes confetti-fall {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 md:p-8">
+
+  <div class="max-w-4xl w-full">
+    
+    <!-- Success Card -->
+    <div class="glass-card rounded-3xl p-8 md:p-12 text-center mb-6 fade-in-up">
+      
+      <!-- Animated Checkmark -->
+      <div class="mb-6">
+        <svg class="w-32 h-32 mx-auto checkmark-circle" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#10b981" stroke-width="4" class="checkmark-circle"/>
+          <path class="checkmark-check" fill="none" stroke="#10b981" stroke-width="4" stroke-linecap="round" 
+                d="M25,50 L40,65 L75,30"/>
+        </svg>
+      </div>
+
+      <!-- Success Message -->
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">
+        <span class="bg-gradient-to-r from-green-400 to-emerald-600 bg-clip-text text-transparent">
+          ¡Registro Exitoso!
+        </span>
+      </h1>
+      
+      <p class="text-xl text-gray-300 mb-2">
+        Bienvenido al equipo Liderman, <strong id="nombrePostulante" class="text-blue-400"></strong>
+      </p>
+      
+      <p class="text-gray-400 max-w-2xl mx-auto">
+        Tu información ha sido registrada correctamente y ha sido asignada a 
+        <strong id="nombreReclutador" class="text-green-400"></strong>
+      </p>
+    </div>
+
+    <!-- Process Timeline -->
+    <div class="glass-card rounded-3xl p-8 md:p-10 mb-6 fade-in-up" style="animation-delay: 0.2s">
+      <h2 class="text-2xl font-bold mb-6 text-center">
+        <span class="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+          Próximos Pasos del Proceso
+        </span>
+      </h2>
+
+      <div class="space-y-3">
+        <!-- Step 1 -->
+        <div class="step completed">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-green-500 flex items-center justify-center mr-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-green-400">1. Verificación de Datos</h3>
+            <p class="text-sm text-gray-400">Completado - Tu información ha sido registrada</p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step active">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center mr-4 animate-pulse">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-blue-400">2. Análisis de Matriz</h3>
+            <p class="text-sm text-gray-400">En proceso - Revisión de antecedentes (1-2 días)</p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center mr-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-gray-400">3. Examen Médico Ocupacional (EMO)</h3>
+            <p class="text-sm text-gray-400">Pendiente - Se programará en 3-5 días</p>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center mr-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-gray-400">4. Homologación y Capacitación</h3>
+            <p class="text-sm text-gray-400">Pendiente - Capacitación de 2 días</p>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center mr-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-gray-400">5. DIC-20 y Documentación</h3>
+            <p class="text-sm text-gray-400">Pendiente - Firma de documentos</p>
+          </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="step">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center mr-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-gray-400">6. Contratación e Inicio</h3>
+            <p class="text-sm text-gray-400">Pendiente - ¡Bienvenido a Liderman!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Info -->
+    <div class="glass-card rounded-3xl p-8 mb-6 fade-in-up" style="animation-delay: 0.4s">
+      <h2 class="text-xl font-bold mb-4 text-center text-blue-400">
+        Información de Contacto
+      </h2>
+      
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold mb-1">Tu Reclutador</h3>
+            <p class="text-gray-400 text-sm" id="reclutadorInfo">-</p>
+            <p class="text-blue-400 text-sm">Te contactará en las próximas 24 horas</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold mb-1">WhatsApp</h3>
+            <p class="text-gray-400 text-sm">+51 930 973 745</p>
+            <button onclick="contactarWhatsApp()" class="text-green-400 text-sm hover:text-green-300 transition">
+              Enviar mensaje →
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold mb-1">Email</h3>
+            <p class="text-gray-400 text-sm" id="emailPostulante">-</p>
+            <p class="text-purple-400 text-sm">rrhh@liderman.com.pe</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold mb-1">Tiempo Estimado</h3>
+            <p class="text-gray-400 text-sm">7-10 días hábiles</p>
+            <p class="text-orange-400 text-sm">Proceso completo de selección</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-4 fade-in-up" style="animation-delay: 0.6s">
+      <button onclick="descargarComprobante()" 
+              class="flex-1 glass-card hover:bg-white/10 py-4 px-6 rounded-xl font-semibold transition-all flex items-center justify-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        Descargar Comprobante
+      </button>
+      <button onclick="window.location.href='landing.html'" 
+              class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 py-4 px-6 rounded-xl font-semibold transition-all">
+        Volver al Inicio
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    // Cargar datos del registro
+    window.addEventListener('load', () => {
+      const registro = JSON.parse(sessionStorage.getItem('registroCompleto') || '{}');
+      
+      if (!registro.nombres) {
+        alert('⚠️ No se encontró información del registro');
+        window.location.href = 'landing.html';
+        return;
+      }
+
+      // Mostrar datos
+      document.getElementById('nombrePostulante').textContent = `${registro.nombres} ${registro.apellidos}`;
+      document.getElementById('nombreReclutador').textContent = registro.reclutadorNombre;
+      document.getElementById('reclutadorInfo').textContent = registro.reclutadorNombre;
+      document.getElementById('emailPostulante').textContent = registro.email;
+
+      // Crear confetti
+      crearConfetti();
+    });
+
+    function crearConfetti() {
+      const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+      for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.left = Math.random() * 100 + '%';
+          confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+          confetti.style.animationDelay = (Math.random() * 0.5) + 's';
+          document.body.appendChild(confetti);
+          
+          setTimeout(() => confetti.remove(), 3500);
+        }, i * 50);
+      }
+    }
+
+    function contactarWhatsApp() {
+      const phone = '51930973745';
+      const mensaje = encodeURIComponent('Hola, completé mi registro en Liderman y me gustaría más información sobre mi proceso.');
+      window.open(`https://wa.me/${phone}?text=${mensaje}`, '_blank');
+    }
+
+    function descargarComprobante() {
+      const registro = JSON.parse(sessionStorage.getItem('registroCompleto') || '{}');
+      
+      const contenido = `
+COMPROBANTE DE REGISTRO
+========================
+LIDERMAN - Reclutamiento & Selección
+
+Postulante: ${registro.nombres} ${registro.apellidos}
+DNI: ${registro.dni}
+Email: ${registro.email}
+Teléfono: ${registro.telefono}
+Cargo: ${registro.cargo}
+
+Reclutador Asignado: ${registro.reclutadorNombre}
+Fecha de Registro: ${new Date(registro.fechaRegistro).toLocaleString('es-PE')}
+Estado: ${registro.estado}
+
+Próximo paso: ${registro.proceso}
+
+Conserva este comprobante para tu seguimiento.
+
+© 2025 Liderman
+      `;
+
+      const blob = new Blob([contenido], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Comprobante_Liderman_${registro.dni}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }
+  </script>
+
+</body>
+</html>

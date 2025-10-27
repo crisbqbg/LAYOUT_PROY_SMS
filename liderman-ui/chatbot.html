@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asistente Virtual | Liderman</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      background-attachment: fixed;
+      color: #fff;
+      overflow: hidden;
+    }
+    
+    .bubble {
+      max-width: 80%;
+      padding: 1rem 1.5rem;
+      border-radius: 18px;
+      margin: 0.5rem;
+      line-height: 1.5;
+      animation: fadeInUp 0.4s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+    
+    .bot-bubble {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.1));
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-left: 4px solid #3b82f6;
+      align-self: flex-start;
+    }
+    
+    .user-bubble {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1));
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-right: 4px solid #10b981;
+      align-self: flex-end;
+      text-align: right;
+    }
+    
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 1rem;
+    }
+    
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: #3b82f6;
+      border-radius: 50%;
+      animation: typing 1.4s infinite;
+    }
+    
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    
+    @keyframes typing {
+      0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+      30% { opacity: 1; transform: translateY(-10px); }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .progress-bar {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      transition: width 0.3s ease;
+    }
+    
+    .quick-reply {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      backdrop-filter: blur(8px);
+      transition: all 0.3s ease;
+    }
+    
+    .quick-reply:hover {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: rgba(59, 130, 246, 0.5);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body class="flex flex-col h-screen">
+
+  <!-- Header con progress -->
+  <header class="bg-gradient-to-r from-blue-900/50 to-blue-800/50 backdrop-blur-md border-b border-white/10">
+    <div class="max-w-4xl mx-auto p-4">
+      <div class="flex justify-between items-center mb-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-lg font-bold">Asistente Virtual Liderman</h1>
+            <p class="text-xs text-gray-400">Paso 2 de 3 · En línea</p>
+          </div>
+        </div>
+        <a href="formulario.html" class="text-blue-400 hover:text-blue-300 text-sm">← Atrás</a>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: 66%"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Chat Area -->
+  <main id="chat" class="flex-1 overflow-y-auto p-4 md:p-6 max-w-4xl mx-auto w-full">
+    <div class="flex flex-col space-y-3" id="chatMessages">
+      <!-- Los mensajes se agregarán aquí dinámicamente -->
+    </div>
+  </main>
+
+  <!-- Quick Replies (aparecerán cuando sea necesario) -->
+  <div id="quickReplies" class="hidden max-w-4xl mx-auto w-full px-4 pb-4">
+    <div class="flex flex-wrap gap-2 justify-center">
+      <!-- Se llenarán dinámicamente -->
+    </div>
+  </div>
+
+  <!-- Footer con CTA -->
+  <footer class="bg-gradient-to-r from-blue-950/40 to-blue-900/40 backdrop-blur-md border-t border-white/10 p-4">
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row gap-3">
+      <button id="btnInteresado" onclick="mostrarInteres()" 
+              class="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 px-6 py-3 rounded-xl font-semibold shadow-lg transition-all flex items-center justify-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+        Estoy Interesado
+      </button>
+      <button onclick="window.location.href='landing.html'" 
+              class="sm:w-auto bg-gray-700 hover:bg-gray-600 px-6 py-3 rounded-xl font-semibold transition-all">
+        No, Gracias
+      </button>
+    </div>
+  </footer>
+
+  <script>
+    const chatMessages = document.getElementById('chatMessages');
+    const quickRepliesDiv = document.getElementById('quickReplies');
+    
+    // Obtener datos del postulante
+    const postulanteData = JSON.parse(sessionStorage.getItem('postulanteData') || '{}');
+    const nombrePostulante = postulanteData.nombres || 'Postulante';
+
+    // Mensajes del bot
+    const conversacion = [
+      {
+        tipo: 'bot',
+        texto: `👋 ¡Hola ${nombrePostulante}! Soy tu asistente virtual de Liderman.`,
+        delay: 500
+      },
+      {
+        tipo: 'bot',
+        texto: 'He revisado tu perfil y tengo excelentes noticias para ti.',
+        delay: 1500
+      },
+      {
+        tipo: 'bot',
+        texto: `Tenemos disponible el puesto de: <strong>${postulanteData.cargo || 'Agente de Seguridad'}</strong>`,
+        delay: 2000
+      },
+      {
+        tipo: 'info',
+        titulo: '💼 Detalles del Puesto',
+        items: [
+          '💰 Sueldo: S/1,800 - S/2,200 mensuales',
+          '⏰ Horario: 12x12 (12 horas trabajo, 12 descanso)',
+          '🚌 Beneficios: Movilidad incluida',
+          '👕 Uniformes proporcionados',
+          '🏥 Seguro de salud EsSalud',
+          '📈 Oportunidades de crecimiento'
+        ],
+        delay: 3000
+      },
+      {
+        tipo: 'bot',
+        texto: '¿Te gustaría conocer más detalles sobre algún aspecto específico?',
+        delay: 4500,
+        quickReplies: ['Horarios', 'Beneficios', 'Requisitos', 'Ubicación']
+      }
+    ];
+
+    let mensajeIndex = 0;
+    let conversacionCompleta = false;
+
+    function agregarMensaje(mensaje) {
+      const messageDiv = document.createElement('div');
+      
+      if (mensaje.tipo === 'bot') {
+        messageDiv.className = 'bubble bot-bubble';
+        messageDiv.innerHTML = mensaje.texto;
+      } else if (mensaje.tipo === 'user') {
+        messageDiv.className = 'bubble user-bubble';
+        messageDiv.textContent = mensaje.texto;
+      } else if (mensaje.tipo === 'info') {
+        messageDiv.className = 'bubble bot-bubble';
+        messageDiv.innerHTML = `
+          <div class="font-semibold mb-2 text-blue-300">${mensaje.titulo}</div>
+          <ul class="space-y-1">
+            ${mensaje.items.map(item => `<li class="text-sm">${item}</li>`).join('')}
+          </ul>
+        `;
+      }
+      
+      chatMessages.appendChild(messageDiv);
+      scrollToBottom();
+    }
+
+    function mostrarTyping() {
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'bubble bot-bubble typing-indicator';
+      typingDiv.id = 'typing';
+      typingDiv.innerHTML = `
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      `;
+      chatMessages.appendChild(typingDiv);
+      scrollToBottom();
+    }
+
+    function removerTyping() {
+      const typing = document.getElementById('typing');
+      if (typing) typing.remove();
+    }
+
+    function scrollToBottom() {
+      setTimeout(() => {
+        chatMessages.parentElement.scrollTop = chatMessages.parentElement.scrollHeight;
+      }, 100);
+    }
+
+    function mostrarQuickReplies(opciones) {
+      quickRepliesDiv.innerHTML = `
+        <p class="text-center text-gray-400 text-sm mb-2">Respuestas rápidas:</p>
+        <div class="flex flex-wrap gap-2 justify-center">
+          ${opciones.map(opcion => `
+            <button onclick="responderQuick('${opcion}')" 
+                    class="quick-reply px-4 py-2 rounded-full text-sm font-medium">
+              ${opcion}
+            </button>
+          `).join('')}
+        </div>
+      `;
+      quickRepliesDiv.classList.remove('hidden');
+    }
+
+    function responderQuick(respuesta) {
+      quickRepliesDiv.classList.add('hidden');
+      
+      // Agregar respuesta del usuario
+      agregarMensaje({ tipo: 'user', texto: respuesta });
+      
+      // Respuesta del bot según la opción
+      setTimeout(() => {
+        mostrarTyping();
+        setTimeout(() => {
+          removerTyping();
+          
+          let respuestaBot = '';
+          switch(respuesta) {
+            case 'Horarios':
+              respuestaBot = 'Los horarios son rotativos de 12x12. Esto significa que trabajas 12 horas y descansas las siguientes 12 horas. Hay turnos diurnos (6am-6pm) y nocturnos (6pm-6am).';
+              break;
+            case 'Beneficios':
+              respuestaBot = 'Además del sueldo base, recibes: movilidad, uniforme completo, seguro EsSalud, bonos por puntualidad, y acceso a capacitaciones constantes.';
+              break;
+            case 'Requisitos':
+              respuestaBot = 'Requisitos: Ser mayor de 18 años, secundaria completa, no tener antecedentes penales ni policiales, disponibilidad inmediata y buena salud física.';
+              break;
+            case 'Ubicación':
+              respuestaBot = `Tenemos puestos disponibles en ${postulanteData.distrito || 'varios distritos de Lima'}. Te asignaremos la ubicación más cercana a tu domicilio.`;
+              break;
+          }
+          
+          agregarMensaje({ tipo: 'bot', texto: respuestaBot });
+          
+          setTimeout(() => {
+            agregarMensaje({ 
+              tipo: 'bot', 
+              texto: '¿Alguna otra duda? Si todo está claro, puedes confirmar tu interés abajo. 👇' 
+            });
+            conversacionCompleta = true;
+          }, 1500);
+        }, 2000);
+      }, 500);
+    }
+
+    function mostrarInteres() {
+      const btnInteresado = document.getElementById('btnInteresado');
+      btnInteresado.disabled = true;
+      btnInteresado.innerHTML = '<svg class="animate-spin w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Confirmando...';
+      
+      // Agregar mensaje de usuario
+      agregarMensaje({ tipo: 'user', texto: '¡Sí, estoy interesado!' });
+      
+      setTimeout(() => {
+        mostrarTyping();
+        setTimeout(() => {
+          removerTyping();
+          agregarMensaje({ 
+            tipo: 'bot', 
+            texto: '¡Excelente! 🎉 Ahora te voy a mostrar los reclutadores disponibles para que elijas con quién deseas continuar el proceso.' 
+          });
+          
+          setTimeout(() => {
+            // Guardar estado de interés
+            sessionStorage.setItem('interesConfirmado', 'true');
+            window.location.href = 'seleccion-reclutador.html';
+          }, 2000);
+        }, 1500);
+      }, 500);
+    }
+
+    // Iniciar conversación
+    function iniciarConversacion() {
+      conversacion.forEach((mensaje, index) => {
+        setTimeout(() => {
+          if (mensaje.tipo !== 'user') {
+            mostrarTyping();
+            setTimeout(() => {
+              removerTyping();
+              agregarMensaje(mensaje);
+              
+              if (mensaje.quickReplies) {
+                mostrarQuickReplies(mensaje.quickReplies);
+              }
+            }, 1500);
+          }
+        }, mensaje.delay);
+      });
+    }
+
+    // Iniciar cuando cargue la página
+    window.addEventListener('load', () => {
+      // Verificar que el usuario haya completado el formulario
+      if (!postulanteData.nombres) {
+        alert('⚠️ Debes completar el formulario primero');
+        window.location.href = 'formulario.html';
+        return;
+      }
+      
+      iniciarConversacion();
+    });
+  </script>
+
+</body>
+</html>

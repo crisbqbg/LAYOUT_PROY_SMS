@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estructura del Proyecto - Liderman SMS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
+    
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #fff;
+      min-height: 100vh;
+    }
+    
+    .folder {
+      color: #60a5fa;
+    }
+    
+    .file {
+      color: #10b981;
+    }
+    
+    .file-essential {
+      color: #fbbf24;
+      font-weight: 700;
+    }
+    
+    .tree-line {
+      color: #475569;
+    }
+    
+    pre {
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body class="p-8">
+
+  <div class="max-w-6xl mx-auto">
+    
+    <div class="bg-slate-800/50 backdrop-blur-xl rounded-2xl p-8 border border-slate-700/50 mb-8">
+      <h1 class="text-4xl font-bold mb-4 text-blue-400">📁 Estructura Final del Proyecto</h1>
+      <p class="text-gray-400 mb-6">Sistema de Reclutamiento SMS - Liderman</p>
+      
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-blue-500/10 p-4 rounded-lg border border-blue-500/30">
+          <div class="text-3xl mb-2">📄</div>
+          <div class="text-2xl font-bold">8</div>
+          <div class="text-sm text-gray-400">Archivos HTML</div>
+        </div>
+        
+        <div class="bg-green-500/10 p-4 rounded-lg border border-green-500/30">
+          <div class="text-3xl mb-2">✅</div>
+          <div class="text-2xl font-bold">5</div>
+          <div class="text-sm text-gray-400">Pasos del Flujo</div>
+        </div>
+        
+        <div class="bg-purple-500/10 p-4 rounded-lg border border-purple-500/30">
+          <div class="text-3xl mb-2">🗑️</div>
+          <div class="text-2xl font-bold">3</div>
+          <div class="text-sm text-gray-400">Archivos Eliminados</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Árbol de Estructura -->
+    <div class="bg-slate-800/50 backdrop-blur-xl rounded-2xl p-8 border border-slate-700/50 mb-8">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <span>🌳</span> Árbol de Archivos
+      </h2>
+      
+      <pre class="text-sm"><span class="folder">liderman-ui/</span>
+<span class="tree-line">│</span>
+<span class="tree-line">├──</span> <span class="file-essential">index.html</span>              <span class="text-gray-500"># Portal de Login (Punto de entrada Admin)</span>
+<span class="tree-line">├──</span> <span class="file-essential">landing.html</span>            <span class="text-gray-500"># Landing Page con selectores geográficos ⭐</span>
+<span class="tree-line">├──</span> <span class="file-essential">formulario.html</span>         <span class="text-gray-500"># Registro de datos personales (9 campos)</span>
+<span class="tree-line">├──</span> <span class="file-essential">chatbot.html</span>            <span class="text-gray-500"># Asistente virtual interactivo</span>
+<span class="tree-line">├──</span> <span class="file-essential">seleccion-reclutador.html</span> <span class="text-gray-500"># Grid de 6 reclutadores</span>
+<span class="tree-line">├──</span> <span class="file-essential">confirmacion-final.html</span> <span class="text-gray-500"># Página de éxito con timeline</span>
+<span class="tree-line">├──</span> <span class="file-essential">reclutador.html</span>         <span class="text-gray-500"># Dashboard de gestión</span>
+<span class="tree-line">├──</span> <span class="file">guia-navegacion.html</span>    <span class="text-gray-500"># Guía visual interactiva 🗺️</span>
+<span class="tree-line">│</span>
+<span class="tree-line">├──</span> <span class="file">README.md</span>               <span class="text-gray-500"># Documentación completa</span>
+<span class="tree-line">├──</span> <span class="file">RESUMEN.md</span>              <span class="text-gray-500"># Resumen ejecutivo</span>
+<span class="tree-line">├──</span> <span class="file">ESTRUCTURA.md</span>           <span class="text-gray-500"># Este documento detallado</span>
+<span class="tree-line">│</span>
+<span class="tree-line">├──</span> <span class="folder">css/</span>
+<span class="tree-line">│   └──</span> <span class="file">custom.css</span>           <span class="text-gray-500"># Estilos personalizados</span>
+<span class="tree-line">│</span>
+<span class="tree-line">├──</span> <span class="folder">js/</span>
+<span class="tree-line">│   └──</span> <span class="file">main.js</span>              <span class="text-gray-500"># Funciones compartidas (login, validaciones)</span>
+<span class="tree-line">│</span>
+<span class="tree-line">└──</span> <span class="folder">img/</span>
+    <span class="tree-line">├──</span> <span class="file">logo.png</span>             <span class="text-gray-500"># Logo de Liderman</span>
+    <span class="tree-line">└──</span> <span class="file">avatar1-6.jpg</span>        <span class="text-gray-500"># Fotos de reclutadores (placeholders)</span>
+</pre>
+    </div>
+
+    <!-- Flujo del Postulante -->
+    <div class="bg-slate-800/50 backdrop-blur-xl rounded-2xl p-8 border border-slate-700/50 mb-8">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <span>🎯</span> Flujo del Postulante (5 Pasos)
+      </h2>
+      
+      <div class="space-y-4">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center font-bold text-xl">1</div>
+          <div class="flex-1">
+            <div class="font-bold text-lg">landing.html</div>
+            <div class="text-sm text-gray-400">Landing page moderna + Selectores geográficos (País → Ciudad → Distrito)</div>
+          </div>
+          <a href="landing.html" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-semibold transition">Abrir</a>
+        </div>
+
+        <div class="pl-6 text-gray-500">↓</div>
+
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center font-bold text-xl">2</div>
+          <div class="flex-1">
+            <div class="font-bold text-lg">formulario.html</div>
+            <div class="text-sm text-gray-400">9 campos con validación (DNI, teléfono, edad, etc.)</div>
+          </div>
+          <a href="formulario.html" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg text-sm font-semibold transition">Abrir</a>
+        </div>
+
+        <div class="pl-6 text-gray-500">↓</div>
+
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-pink-500 rounded-full flex items-center justify-center font-bold text-xl">3</div>
+          <div class="flex-1">
+            <div class="font-bold text-lg">chatbot.html</div>
+            <div class="text-sm text-gray-400">Asistente virtual con typing indicator y respuestas rápidas</div>
+          </div>
+          <a href="chatbot.html" class="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded-lg text-sm font-semibold transition">Abrir</a>
+        </div>
+
+        <div class="pl-6 text-gray-500">↓</div>
+
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center font-bold text-xl">4</div>
+          <div class="flex-1">
+            <div class="font-bold text-lg">seleccion-reclutador.html</div>
+            <div class="text-sm text-gray-400">Grid de 6 reclutadores con estados (disponible, ocupado, no disponible)</div>
+          </div>
+          <a href="seleccion-reclutador.html" class="bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded-lg text-sm font-semibold transition">Abrir</a>
+        </div>
+
+        <div class="pl-6 text-gray-500">↓</div>
+
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center font-bold text-xl">5</div>
+          <div class="flex-1">
+            <div class="font-bold text-lg">confirmacion-final.html</div>
+            <div class="text-sm text-gray-400">Página de éxito con confetti, timeline y descarga de comprobante</div>
+          </div>
+          <a href="confirmacion-final.html" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg text-sm font-semibold transition">Abrir</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flujo del Reclutador -->
+    <div class="bg-slate-800/50 backdrop-blur-xl rounded-2xl p-8 border border-slate-700/50 mb-8">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <span>👔</span> Flujo del Reclutador (2 Pasos)
+      </h2>
+      
+      <div class="space-y-4">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center font-bold text-xl">🔐</div>
+          <div class="flex-1">
+            <div class="font-bold text-lg">index.html</div>
+            <div class="text-sm text-gray-400">Portal de login (r123 / r123)</div>
+          </div>
+          <a href="index.html" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-semibold transition">Abrir</a>
+        </div>
+
+        <div class="pl-6 text-gray-500">↓</div>
+
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center font-bold text-xl">📊</div>
+          <div class="flex-1">
+            <div class="font-bold text-lg">reclutador.html</div>
+            <div class="text-sm text-gray-400">Dashboard con tabla de postulantes y acciones (aprobar/rechazar)</div>
+          </div>
+          <a href="reclutador.html" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg text-sm font-semibold transition">Abrir</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Archivos Eliminados -->
+    <div class="bg-red-900/20 backdrop-blur-xl rounded-2xl p-8 border border-red-700/50 mb-8">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <span>🗑️</span> Archivos Eliminados
+      </h2>
+      
+      <div class="space-y-2 text-sm">
+        <div class="flex items-center gap-3">
+          <span class="text-red-400">✖</span>
+          <span class="line-through text-gray-500">postulante.html</span>
+          <span class="text-gray-600 text-xs">- No usado en el flujo principal</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-red-400">✖</span>
+          <span class="line-through text-gray-500">test.html</span>
+          <span class="text-gray-600 text-xs">- Archivo de pruebas temporales</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-red-400">✖</span>
+          <span class="line-through text-gray-500">test-ubicacion.html</span>
+          <span class="text-gray-600 text-xs">- Prueba específica de selectores</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="bg-slate-800/50 backdrop-blur-xl rounded-2xl p-8 border border-slate-700/50">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <span>🚀</span> Acciones Rápidas
+      </h2>
+      
+      <div class="grid md:grid-cols-2 gap-4">
+        <a href="guia-navegacion.html" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 p-6 rounded-xl transition flex items-center gap-4">
+          <div class="text-4xl">🗺️</div>
+          <div>
+            <div class="font-bold text-lg mb-1">Guía de Navegación</div>
+            <div class="text-sm opacity-90">Explora el sistema completo</div>
+          </div>
+        </a>
+
+        <a href="landing.html" class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 p-6 rounded-xl transition flex items-center gap-4">
+          <div class="text-4xl">🎯</div>
+          <div>
+            <div class="font-bold text-lg mb-1">Comenzar Postulación</div>
+            <div class="text-sm opacity-90">Flujo del postulante</div>
+          </div>
+        </a>
+
+        <a href="index.html" class="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 p-6 rounded-xl transition flex items-center gap-4">
+          <div class="text-4xl">👔</div>
+          <div>
+            <div class="font-bold text-lg mb-1">Portal Reclutador</div>
+            <div class="text-sm opacity-90">Dashboard administrativo</div>
+          </div>
+        </a>
+
+        <a href="ESTRUCTURA.md" download class="bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-500 hover:to-orange-600 p-6 rounded-xl transition flex items-center gap-4">
+          <div class="text-4xl">📄</div>
+          <div>
+            <div class="font-bold text-lg mb-1">Documentación</div>
+            <div class="text-sm opacity-90">Descargar ESTRUCTURA.md</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center mt-8 text-gray-500 text-sm">
+      <p>© 2025 Liderman - Sistema de Reclutamiento SMS</p>
+      <p class="mt-2">Prototipo Funcional v1.0.0</p>
+    </div>
+
+  </div>
+
+</body>
+</html>
