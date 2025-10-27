@@ -16,7 +16,9 @@ function login() {
 
   // Credenciales de postulante
   if (user === "u123" && pass === "u123") {
-    window.location.href = "landing.html";
+    function volverInicio() {
+    window.location.href = "index.html";
+}
   } 
   // Credenciales de reclutador
   else if (user === "r123" && pass === "r123") {
