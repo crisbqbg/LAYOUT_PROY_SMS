@@ -119,6 +119,258 @@
       background-clip: text;
       letter-spacing: -0.02em;
     }
+
+    /* Criticidad badges */
+    .criticidad-alta {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .criticidad-media {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .criticidad-baja {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    /* Mensaje item */
+    .mensaje-item {
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 0.75rem;
+      margin-bottom: 0.75rem;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .mensaje-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(59, 130, 246, 0.3);
+      transform: translateX(4px);
+    }
+
+    .mensaje-item.no-leido {
+      background: rgba(59, 130, 246, 0.08);
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .mensaje-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6 0%, #ec4899 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .mensaje-badge {
+      width: 24px;
+      height: 24px;
+      background: #ef4444;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* Scroll para mensajes */
+    .mensajes-container {
+      max-height: calc(100vh - 300px);
+      overflow-y: auto;
+    }
+
+    .mensajes-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .mensajes-container::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+    }
+
+    .mensajes-container::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.3);
+      border-radius: 10px;
+    }
+
+    .mensajes-container::-webkit-scrollbar-thumb:hover {
+      background: rgba(59, 130, 246, 0.5);
+    }
+
+    /* Progress ring */
+    .progress-ring {
+      transform: rotate(-90deg);
+    }
+
+    .progress-ring-circle {
+      transition: stroke-dashoffset 0.35s;
+      transform-origin: 50% 50%;
+    }
+
+    /* Chat Panel Styles */
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .chat-panel {
+      position: fixed;
+      top: 64px;
+      right: 0;
+      bottom: 0;
+      background: rgba(17, 24, 39, 0.98);
+      backdrop-filter: blur(20px);
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 50;
+      display: none;
+      flex-direction: column;
+      transition: width 0.3s ease;
+    }
+
+    .chat-panel.active {
+      display: flex;
+      animation: slideInRight 0.3s ease-out forwards;
+    }
+
+    .chat-resize-handle {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: transparent;
+      cursor: ew-resize;
+      transition: background 0.2s;
+    }
+
+    .chat-resize-handle:hover {
+      background: rgba(59, 130, 246, 0.5);
+    }
+
+    .chat-resize-handle:active {
+      background: rgba(59, 130, 246, 0.8);
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      scroll-behavior: smooth;
+    }
+
+    .chat-messages::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .chat-messages::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 3px;
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.3);
+      border-radius: 3px;
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb:hover {
+      background: rgba(59, 130, 246, 0.5);
+    }
+
+    .chat-bubble {
+      max-width: 75%;
+      padding: 0.75rem 1rem;
+      border-radius: 1rem;
+      margin-bottom: 0.5rem;
+      word-wrap: break-word;
+      animation: fadeInUp 0.3s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .chat-bubble.postulante {
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      margin-right: auto;
+      border-bottom-left-radius: 0.25rem;
+    }
+
+    .chat-bubble.reclutador {
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      margin-left: auto;
+      border-bottom-right-radius: 0.25rem;
+    }
+
+    .chat-input-area {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 0.75rem 1rem;
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 1rem;
+      border-bottom-left-radius: 0.25rem;
+      width: fit-content;
+      margin-bottom: 0.5rem;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(59, 130, 246, 0.6);
+      animation: typingBounce 1.4s infinite;
+    }
+
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes typingBounce {
+      0%, 60%, 100% {
+        transform: translateY(0);
+      }
+      30% {
+        transform: translateY(-8px);
+      }
+    }
   </style>
 </head>
 <body class="hero-gradient">
@@ -146,6 +398,12 @@
             </svg>
             Módulo SMS
           </button>
+          <button onclick="window.location.href='seguimiento-sms.html'" class="text-slate-400 hover:text-purple-400 text-sm font-medium transition-colors flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+            Seguimiento SMS
+          </button>
           <button onclick="window.location.href='../index.html'" class="text-slate-400 hover:text-blue-400 text-sm font-medium transition-colors">
             Portal Postulante
           </button>
@@ -163,75 +421,164 @@
   <!-- Contenido Principal -->
   <main class="max-w-7xl mx-auto px-6 pt-24 pb-12">
     
-    <!-- Bienvenida -->
-    <div class="mb-8">
-      <h2 class="text-3xl font-bold mb-2">
-        <span class="gradient-text">Mis Requerimientos</span>
-      </h2>
-      <p class="text-slate-400 text-sm">
-        Gestiona y realiza seguimiento a todos tus requerimientos activos
-      </p>
-    </div>
-
-    <!-- Estadísticas Generales -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
       
-      <div class="glass-card rounded-2xl p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
-            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-            </svg>
+      <!-- Panel Izquierdo - Bandeja de Mensajes -->
+      <div class="lg:col-span-1">
+        <div class="glass-card rounded-2xl p-6 sticky top-24">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold">Mensajes</h3>
+            <span class="mensaje-badge">12</span>
           </div>
+          
+          <div class="mensajes-container">
+            <!-- Mensajes dinámicos -->
+            <div id="mensajesContainer"></div>
+          </div>
+
+          <button onclick="verTodosMensajes()" class="w-full mt-4 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-xl font-semibold text-sm transition-all">
+            Ver Todos
+          </button>
         </div>
-        <div class="stat-number">256</div>
-        <div class="text-sm text-slate-400 mt-1">Postulantes Totales</div>
       </div>
 
-      <div class="glass-card rounded-2xl p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
-            <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
+      <!-- Panel Central y Derecho -->
+      <div class="lg:col-span-3 space-y-6">
+        
+        <!-- Bienvenida -->
+        <div class="mb-8">
+          <h2 class="text-3xl font-bold mb-2">
+            <span class="gradient-text">Panel de Control</span>
+          </h2>
+          <p class="text-slate-400 text-sm">
+            Gestiona y realiza seguimiento a todos tus requerimientos activos
+          </p>
+        </div>
+
+        <!-- Estadísticas Generales -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          
+          <div class="glass-card rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-number">12</div>
+            <div class="text-sm text-slate-400 mt-1">Mensajes Pendientes</div>
+          </div>
+
+          <div class="glass-card rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center">
+                <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-number">3</div>
+            <div class="text-sm text-slate-400 mt-1">Requerimientos Urgentes</div>
+          </div>
+
+          <div class="glass-card rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl bg-yellow-500/20 flex items-center justify-center">
+                <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-number">45</div>
+            <div class="text-sm text-slate-400 mt-1">Vacantes por Cubrir</div>
+          </div>
+
+          <div class="glass-card rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-number">143</div>
+            <div class="text-sm text-slate-400 mt-1">Candidatos Aptos</div>
+          </div>
+
+        </div>
+
+        <!-- Tarjetas de Requerimientos -->
+        <div>
+          <h3 class="text-xl font-bold mb-4">Mis Requerimientos</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="requerimientosContainer">
+            <!-- Se llenarán dinámicamente -->
           </div>
         </div>
-        <div class="stat-number">143</div>
-        <div class="text-sm text-slate-400 mt-1">Aptos</div>
+
       </div>
 
-      <div class="glass-card rounded-2xl p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 rounded-xl bg-yellow-500/20 flex items-center justify-center">
-            <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-          </div>
-        </div>
-        <div class="stat-number">68</div>
-        <div class="text-sm text-slate-400 mt-1">En Proceso</div>
-      </div>
-
-      <div class="glass-card rounded-2xl p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center">
-            <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-          </div>
-        </div>
-        <div class="stat-number">45</div>
-        <div class="text-sm text-slate-400 mt-1">Descartados</div>
-      </div>
-
-    </div>
-
-    <!-- Tarjetas de Requerimientos -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="requerimientosContainer">
-      <!-- Se llenarán dinámicamente -->
     </div>
 
   </main>
+
+  <!-- Panel de Chat -->
+  <div id="chatPanel" class="chat-panel">
+    <div class="chat-resize-handle" id="chatResizeHandle"></div>
+    
+    <!-- Header del Chat -->
+    <div class="flex items-center justify-between p-4 border-b border-white/10">
+      <div class="flex items-center gap-3">
+        <div id="chatAvatar" class="mensaje-avatar"></div>
+        <div>
+          <h3 id="chatNombre" class="text-white font-semibold"></h3>
+          <p id="chatEstado" class="text-xs text-gray-400">En línea</p>
+        </div>
+      </div>
+      <button onclick="cerrarChat()" class="text-gray-400 hover:text-white transition-colors p-2">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mensajes del Chat -->
+    <div id="chatMessages" class="chat-messages"></div>
+
+    <!-- Área de Entrada -->
+    <div class="chat-input-area">
+      <div class="flex gap-2">
+        <input 
+          type="text" 
+          id="chatInput" 
+          placeholder="Escribe un mensaje..."
+          class="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent"
+          onkeypress="if(event.key === 'Enter') enviarMensaje()"
+        />
+        <button 
+          onclick="enviarMensaje()" 
+          class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-all duration-200 hover:scale-105 flex items-center gap-2"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+          </svg>
+          Enviar
+        </button>
+      </div>
+      <div class="flex gap-2 mt-2">
+        <button class="text-gray-400 hover:text-white transition-colors p-2" title="Adjuntar archivo">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
+          </svg>
+        </button>
+        <button class="text-gray-400 hover:text-white transition-colors p-2" title="Plantillas rápidas">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script>
     // Verificar autenticación
@@ -269,7 +616,10 @@
         estado: 'Activo',
         prioridad: 'Alta',
         vacantes: 100,
-        cubiertos: 28
+        cubiertos: 28,
+        diasRestantes: 5,
+        criticidadTiempo: 'Alta',
+        criticidadCobertura: 'Alta'
       },
       {
         codigo: 'RQ-CD-2',
@@ -282,7 +632,10 @@
         estado: 'Activo',
         prioridad: 'Media',
         vacantes: 80,
-        cubiertos: 22
+        cubiertos: 22,
+        diasRestantes: 12,
+        criticidadTiempo: 'Media',
+        criticidadCobertura: 'Media'
       },
       {
         codigo: 'RQ-CD-3',
@@ -295,7 +648,10 @@
         estado: 'Activo',
         prioridad: 'Alta',
         vacantes: 120,
-        cubiertos: 35
+        cubiertos: 35,
+        diasRestantes: 8,
+        criticidadTiempo: 'Media',
+        criticidadCobertura: 'Alta'
       },
       {
         codigo: 'RQ-UNI-1',
@@ -308,7 +664,10 @@
         estado: 'Activo',
         prioridad: 'Baja',
         vacantes: 50,
-        cubiertos: 18
+        cubiertos: 18,
+        diasRestantes: 20,
+        criticidadTiempo: 'Baja',
+        criticidadCobertura: 'Media'
       },
       {
         codigo: 'RQ-UNI-2',
@@ -321,7 +680,10 @@
         estado: 'Activo',
         prioridad: 'Media',
         vacantes: 40,
-        cubiertos: 15
+        cubiertos: 15,
+        diasRestantes: 15,
+        criticidadTiempo: 'Media',
+        criticidadCobertura: 'Media'
       },
       {
         codigo: 'RQ-MNF-1',
@@ -334,9 +696,106 @@
         estado: 'Activo',
         prioridad: 'Alta',
         vacantes: 150,
-        cubiertos: 25
+        cubiertos: 25,
+        diasRestantes: 3,
+        criticidadTiempo: 'Alta',
+        criticidadCobertura: 'Alta'
       }
     ];
+
+    // Mensajes de postulantes
+    const mensajes = [
+      {
+        id: 1,
+        nombre: 'Juan Pérez',
+        mensaje: '¿Cuándo sería la fecha de la entrevista?',
+        hora: '10:30 AM',
+        leido: false,
+        avatar: 'JP'
+      },
+      {
+        id: 2,
+        nombre: 'María López',
+        mensaje: 'Confirmo mi asistencia para mañana',
+        hora: '10:15 AM',
+        leido: false,
+        avatar: 'ML'
+      },
+      {
+        id: 3,
+        nombre: 'Carlos Ruiz',
+        mensaje: 'Adjunto mis documentos solicitados',
+        hora: '9:45 AM',
+        leido: false,
+        avatar: 'CR'
+      },
+      {
+        id: 4,
+        nombre: 'Ana Torres',
+        mensaje: '¿Necesito llevar algo adicional?',
+        hora: '9:20 AM',
+        leido: false,
+        avatar: 'AT'
+      },
+      {
+        id: 5,
+        nombre: 'Luis Mendoza',
+        mensaje: 'Gracias por la información',
+        hora: 'Ayer',
+        leido: true,
+        avatar: 'LM'
+      },
+      {
+        id: 6,
+        nombre: 'Rosa Campos',
+        mensaje: '¿El horario es flexible?',
+        hora: 'Ayer',
+        leido: false,
+        avatar: 'RC'
+      },
+      {
+        id: 7,
+        nombre: 'Pedro Silva',
+        mensaje: 'Confirmo recepción del mensaje',
+        hora: 'Ayer',
+        leido: true,
+        avatar: 'PS'
+      },
+      {
+        id: 8,
+        nombre: 'Laura Vega',
+        mensaje: '¿Cuál es el salario ofrecido?',
+        hora: '26 Oct',
+        leido: false,
+        avatar: 'LV'
+      }
+    ];
+
+    // Renderizar mensajes
+    function renderizarMensajes() {
+      const container = document.getElementById('mensajesContainer');
+      const mensajesNoLeidos = mensajes.filter(m => !m.leido).slice(0, 5);
+      
+      container.innerHTML = '';
+      mensajesNoLeidos.forEach(msg => {
+        const div = document.createElement('div');
+        div.className = `mensaje-item ${!msg.leido ? 'no-leido' : ''}`;
+        div.onclick = () => abrirMensaje(msg.id);
+        div.innerHTML = `
+          <div class="flex gap-3">
+            <div class="mensaje-avatar">${msg.avatar}</div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between mb-1">
+                <span class="font-semibold text-sm text-white">${msg.nombre}</span>
+                <span class="text-xs text-slate-500">${msg.hora}</span>
+              </div>
+              <p class="text-sm text-slate-400 truncate">${msg.mensaje}</p>
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
 
     // Renderizar tarjetas
     function renderizarRequerimientos() {
@@ -344,14 +803,19 @@
       
       requerimientos.forEach(req => {
         const porcentaje = Math.round((req.cubiertos / req.vacantes) * 100);
+        const vacantesRestantes = req.vacantes - req.cubiertos;
         const prioridadClass = {
           'Alta': 'badge-danger',
           'Media': 'badge-warning',
           'Baja': 'badge-primary'
         };
+        const criticidadCobertura = req.criticidadCobertura === 'Alta' ? 'criticidad-alta' : 
+                                    req.criticidadCobertura === 'Media' ? 'criticidad-media' : 'criticidad-baja';
+        const criticidadTiempo = req.criticidadTiempo === 'Alta' ? 'criticidad-alta' : 
+                                 req.criticidadTiempo === 'Media' ? 'criticidad-media' : 'criticidad-baja';
 
         const card = `
-          <div class="glass-card rounded-2xl p-6 cursor-pointer" onclick="verPostulantes('${req.codigo}')">
+          <div class="glass-card rounded-2xl p-6 cursor-pointer hover:scale-[1.02] transition-all" onclick="verPostulantes('${req.codigo}')">
             <!-- Header -->
             <div class="flex items-start justify-between mb-4">
               <div>
@@ -366,6 +830,20 @@
                 <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                 </svg>
+              </div>
+            </div>
+
+            <!-- Criticidad -->
+            <div class="grid grid-cols-2 gap-3 mb-4">
+              <div class="p-3 rounded-xl ${criticidadCobertura}">
+                <div class="text-xs mb-1">Criticidad Cobertura</div>
+                <div class="text-xl font-bold">${vacantesRestantes}</div>
+                <div class="text-xs opacity-75">Vacantes por cubrir</div>
+              </div>
+              <div class="p-3 rounded-xl ${criticidadTiempo}">
+                <div class="text-xs mb-1">Criticidad Tiempo</div>
+                <div class="text-xl font-bold">${req.diasRestantes}</div>
+                <div class="text-xs opacity-75">Días restantes</div>
               </div>
             </div>
 
@@ -417,11 +895,229 @@
       window.location.href = 'seguimiento-borrador.html';
     }
 
+    // Estado del chat
+    let chatActual = null;
+    let chatWidth = 400; // Ancho inicial en píxeles
+    let isResizing = false;
+
+    // Historial de conversaciones (simulado)
+    const conversaciones = {
+      1: [
+        { tipo: 'postulante', mensaje: '¿Cuándo sería la fecha de inicio para el puesto de Supervisor de Seguridad?', hora: '10:30 AM' },
+        { tipo: 'reclutador', mensaje: 'Hola Juan, gracias por tu interés. La fecha de inicio sería el 15 de noviembre. ¿Te parece bien?', hora: '10:35 AM' },
+        { tipo: 'postulante', mensaje: 'Perfecto, me viene muy bien. ¿Cuál sería el siguiente paso en el proceso?', hora: '10:37 AM' },
+        { tipo: 'reclutador', mensaje: 'El siguiente paso es una entrevista presencial. ¿Tienes disponibilidad esta semana?', hora: '10:40 AM' },
+        { tipo: 'postulante', mensaje: 'Sí, tengo disponibilidad toda la semana excepto el miércoles.', hora: '10:42 AM' }
+      ],
+      2: [
+        { tipo: 'postulante', mensaje: 'Buenos días, quisiera saber más detalles sobre el horario de trabajo para Guardia de Seguridad.', hora: '11:15 AM' },
+        { tipo: 'reclutador', mensaje: 'Buenos días María, el horario es rotativo: turnos de día (6am-2pm), tarde (2pm-10pm) y noche (10pm-6am).', hora: '11:20 AM' },
+        { tipo: 'postulante', mensaje: 'Entiendo. ¿Los turnos rotan semanalmente?', hora: '11:22 AM' }
+      ],
+      3: [
+        { tipo: 'postulante', mensaje: 'Hola, me gustaría confirmar si el puesto de Almacenero incluye capacitación inicial.', hora: '09:45 AM' },
+        { tipo: 'reclutador', mensaje: 'Sí Carlos, incluye una semana de capacitación remunerada antes de empezar formalmente.', hora: '09:50 AM' },
+        { tipo: 'postulante', mensaje: '¡Excelente! ¿La capacitación es en el mismo centro de trabajo?', hora: '09:52 AM' },
+        { tipo: 'reclutador', mensaje: 'Así es, será en nuestro centro de San Miguel de lunes a viernes.', hora: '09:55 AM' }
+      ],
+      4: [
+        { tipo: 'postulante', mensaje: 'Buenas tardes, ¿el puesto de Operador de Montacargas requiere certificación previa?', hora: '02:30 PM' },
+        { tipo: 'reclutador', mensaje: 'Buenas tardes Ana, sí es necesario contar con certificación vigente de operador de montacargas.', hora: '02:35 PM' }
+      ],
+      5: [
+        { tipo: 'postulante', mensaje: 'Hola, quería consultar sobre los beneficios que ofrece el puesto de Cajero.', hora: '03:20 PM' },
+        { tipo: 'reclutador', mensaje: 'Hola Luis, los beneficios incluyen: seguro de salud, bonos por desempeño y descuentos en tiendas del grupo.', hora: '03:25 PM' },
+        { tipo: 'postulante', mensaje: 'Suena muy bien. ¿Cuándo podría tener una entrevista?', hora: '03:27 PM' }
+      ],
+      6: [
+        { tipo: 'postulante', mensaje: '¿El puesto de Empaquetador tiene posibilidades de crecimiento dentro de la empresa?', hora: '04:10 PM' }
+      ],
+      7: [
+        { tipo: 'postulante', mensaje: 'Buenas, quisiera saber si para el puesto de Reponedor es necesario tener vehículo propio.', hora: '12:00 PM' },
+        { tipo: 'reclutador', mensaje: 'Hola Patricia, no es necesario. La empresa proporciona el transporte para la distribución.', hora: '12:05 PM' }
+      ],
+      8: [
+        { tipo: 'postulante', mensaje: 'Hola, me interesa el puesto de Analista de Calidad. ¿Qué software manejan?', hora: '01:45 PM' }
+      ]
+    };
+
+    // Abrir mensaje y mostrar chat
+    function abrirMensaje(id) {
+      chatActual = mensajes.find(m => m.id === id);
+      if (!chatActual) return;
+
+      const chatPanel = document.getElementById('chatPanel');
+      const chatAvatar = document.getElementById('chatAvatar');
+      const chatNombre = document.getElementById('chatNombre');
+      const chatMessages = document.getElementById('chatMessages');
+
+      // Configurar header del chat
+      chatAvatar.textContent = chatActual.avatar;
+      chatNombre.textContent = chatActual.nombre;
+
+      // Cargar mensajes de la conversación
+      renderizarConversacion(id);
+
+      // Mostrar panel con ancho guardado
+      chatPanel.style.width = `${chatWidth}px`;
+      chatPanel.classList.add('active');
+      chatPanel.classList.add('slide-in-right');
+
+      // Marcar como leído
+      chatActual.leido = true;
+      renderizarMensajes();
+
+      // Scroll al final
+      setTimeout(() => {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }, 100);
+    }
+
+    // Renderizar conversación
+    function renderizarConversacion(id) {
+      const chatMessages = document.getElementById('chatMessages');
+      const conversacion = conversaciones[id] || [];
+      
+      chatMessages.innerHTML = conversacion.map(msg => `
+        <div class="flex ${msg.tipo === 'reclutador' ? 'justify-end' : 'justify-start'} mb-2">
+          <div class="chat-bubble ${msg.tipo}">
+            <p class="text-white text-sm">${msg.mensaje}</p>
+            <span class="text-xs text-gray-400 mt-1 block">${msg.hora}</span>
+          </div>
+        </div>
+      `).join('');
+
+      // Añadir indicador de escritura si el último mensaje es del reclutador
+      if (conversacion.length > 0 && conversacion[conversacion.length - 1].tipo === 'reclutador') {
+        // Simular que el postulante está escribiendo ocasionalmente
+        if (Math.random() > 0.7) {
+          chatMessages.innerHTML += `
+            <div class="typing-indicator">
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+            </div>
+          `;
+        }
+      }
+    }
+
+    // Cerrar chat
+    function cerrarChat() {
+      const chatPanel = document.getElementById('chatPanel');
+      chatPanel.classList.remove('active', 'slide-in-right');
+      chatActual = null;
+    }
+
+    // Enviar mensaje
+    function enviarMensaje() {
+      const input = document.getElementById('chatInput');
+      const mensaje = input.value.trim();
+      
+      if (!mensaje || !chatActual) return;
+
+      const chatMessages = document.getElementById('chatMessages');
+      const ahora = new Date();
+      const hora = ahora.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' });
+
+      // Agregar mensaje del reclutador
+      const nuevoMensaje = { tipo: 'reclutador', mensaje: mensaje, hora: hora };
+      
+      if (!conversaciones[chatActual.id]) {
+        conversaciones[chatActual.id] = [];
+      }
+      conversaciones[chatActual.id].push(nuevoMensaje);
+
+      // Renderizar el nuevo mensaje
+      const mensajeHTML = `
+        <div class="flex justify-end mb-2">
+          <div class="chat-bubble reclutador">
+            <p class="text-white text-sm">${mensaje}</p>
+            <span class="text-xs text-gray-400 mt-1 block">${hora}</span>
+          </div>
+        </div>
+      `;
+      
+      chatMessages.insertAdjacentHTML('beforeend', mensajeHTML);
+      
+      // Limpiar input
+      input.value = '';
+      
+      // Scroll al final
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // Simular respuesta automática (opcional)
+      setTimeout(() => {
+        const respuestas = [
+          'Perfecto, muchas gracias por la información.',
+          'Entendido, quedo atento.',
+          'Excelente, me parece bien.',
+          'Gracias, entonces confirmo mi asistencia.',
+          'De acuerdo, estaré pendiente.'
+        ];
+        const respuestaAuto = {
+          tipo: 'postulante',
+          mensaje: respuestas[Math.floor(Math.random() * respuestas.length)],
+          hora: new Date().toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' })
+        };
+        
+        conversaciones[chatActual.id].push(respuestaAuto);
+        
+        const respuestaHTML = `
+          <div class="flex justify-start mb-2">
+            <div class="chat-bubble postulante">
+              <p class="text-white text-sm">${respuestaAuto.mensaje}</p>
+              <span class="text-xs text-gray-400 mt-1 block">${respuestaAuto.hora}</span>
+            </div>
+          </div>
+        `;
+        
+        chatMessages.insertAdjacentHTML('beforeend', respuestaHTML);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }, 2000);
+    }
+
+    // Sistema de redimensionamiento del chat
+    const chatResizeHandle = document.getElementById('chatResizeHandle');
+    const chatPanel = document.getElementById('chatPanel');
+
+    chatResizeHandle.addEventListener('mousedown', (e) => {
+      isResizing = true;
+      document.body.style.cursor = 'ew-resize';
+      document.body.style.userSelect = 'none';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isResizing) return;
+      
+      const newWidth = window.innerWidth - e.clientX;
+      
+      // Limitar ancho mínimo y máximo
+      if (newWidth >= 300 && newWidth <= 800) {
+        chatWidth = newWidth;
+        chatPanel.style.width = `${chatWidth}px`;
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isResizing) {
+        isResizing = false;
+        document.body.style.cursor = 'default';
+        document.body.style.userSelect = 'auto';
+      }
+    });
+
+    // Ver todos los mensajes
+    function verTodosMensajes() {
+      window.location.href = 'mensajeria.html';
+    }
+
     // Inicializar
     window.addEventListener('load', () => {
       const session = verificarAutenticacion();
       if (session) {
         document.getElementById('userInfo').textContent = `${session.nombre} - ${session.rol}`;
+        renderizarMensajes();
         renderizarRequerimientos();
       }
     });

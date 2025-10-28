@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seguimiento SMS | Liderman</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0f1e;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    .hero-gradient {
+      background: linear-gradient(135deg, 
+        #0a0f1e 0%, 
+        #111827 25%,
+        #1e293b 50%,
+        #0f172a 75%,
+        #0a0f1e 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      min-height: 100vh;
+    }
+    
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .navbar {
+      background: rgba(10, 15, 30, 0.8);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Tabla de seguimiento */
+    table {
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+    }
+
+    th {
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: #94a3b8;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.875rem;
+    }
+
+    tr:hover {
+      background: rgba(59, 130, 246, 0.05);
+    }
+
+    /* Estados */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-enviado {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .status-recibido {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .status-respondido {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .status-registrado {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .status-pendiente {
+      background: rgba(107, 114, 128, 0.15);
+      color: #9ca3af;
+      border: 1px solid rgba(107, 114, 128, 0.3);
+    }
+
+    .status-error {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* Indicadores visuales */
+    .status-icon {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .icon-check {
+      background: #10b981;
+      animation: pulse 2s infinite;
+    }
+
+    .icon-pending {
+      background: #6b7280;
+    }
+
+    .icon-error {
+      background: #ef4444;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    /* Filtros */
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .filter-btn:hover {
+      background: rgba(59, 130, 246, 0.1);
+      border-color: rgba(59, 130, 246, 0.3);
+      color: #60a5fa;
+    }
+
+    .filter-btn.active {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: rgba(59, 130, 246, 0.5);
+      color: #60a5fa;
+    }
+
+    /* Stats cards */
+    .stat-card {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #60a5fa 0%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Scroll personalizado */
+    .table-container::-webkit-scrollbar {
+      height: 8px;
+      width: 8px;
+    }
+
+    .table-container::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.3);
+      border-radius: 10px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb:hover {
+      background: rgba(59, 130, 246, 0.5);
+    }
+
+    /* Modal de ejemplo */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: rgba(17, 24, 39, 0.98);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      max-width: 800px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Code block */
+    .code-block {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.875rem;
+      color: #a5b4fc;
+    }
+
+    .code-block::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .code-block::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .code-block::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.3);
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="hero-gradient">
+
+  <!-- Navbar -->
+  <nav class="navbar fixed w-full top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-4">
+          <a href="dashboard.html" class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-pink-500 flex items-center justify-center font-bold text-white">
+              L
+            </div>
+            <span class="text-xl font-bold gradient-text">Liderman</span>
+          </a>
+          <span class="text-gray-400 text-sm">/ Seguimiento SMS</span>
+        </div>
+        
+        <div class="flex items-center gap-4">
+          <button onclick="mostrarEjemplo()" class="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded-xl font-semibold text-sm transition-all border border-purple-500/30">
+            📖 Ver Ejemplo Guiado
+          </button>
+          <span id="userInfo" class="text-sm text-gray-400"></span>
+          <button onclick="cerrarSesion()" class="text-sm text-red-400 hover:text-red-300 transition-colors">
+            Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenido Principal -->
+  <main class="max-w-7xl mx-auto px-6 pt-24 pb-12">
+    
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold gradient-text mb-2">Seguimiento de Mensajes SMS</h1>
+      <p class="text-gray-400">Monitoreo en tiempo real del estado de envíos masivos</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+      
+      <div class="stat-card">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-gray-400 text-sm">Total Enviados</span>
+          <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+          </svg>
+        </div>
+        <div class="stat-number" id="statEnviados">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-gray-400 text-sm">Recibidos</span>
+          <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <div class="stat-number" id="statRecibidos">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-gray-400 text-sm">Respondidos</span>
+          <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
+          </svg>
+        </div>
+        <div class="stat-number" id="statRespondidos">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-gray-400 text-sm">Registrados</span>
+          <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+        </div>
+        <div class="stat-number" id="statRegistrados">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-gray-400 text-sm">Tasa Éxito</span>
+          <svg class="w-5 h-5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+          </svg>
+        </div>
+        <div class="stat-number" id="statTasa">0%</div>
+      </div>
+
+    </div>
+
+    <!-- Filtros y Búsqueda -->
+    <div class="glass-card rounded-2xl p-6 mb-6">
+      <div class="flex flex-col lg:flex-row gap-4 items-center justify-between">
+        
+        <!-- Búsqueda -->
+        <div class="relative flex-1 max-w-md">
+          <input 
+            type="text" 
+            id="searchInput"
+            placeholder="Buscar por nombre, teléfono o DNI..."
+            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pl-11 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent text-sm"
+            oninput="filtrarTabla()"
+          />
+          <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+
+        <!-- Filtros -->
+        <div class="flex gap-2 flex-wrap">
+          <button onclick="cambiarFiltro('todos')" class="filter-btn active" data-filter="todos">
+            Todos
+          </button>
+          <button onclick="cambiarFiltro('enviado')" class="filter-btn" data-filter="enviado">
+            Enviados
+          </button>
+          <button onclick="cambiarFiltro('recibido')" class="filter-btn" data-filter="recibido">
+            Recibidos
+          </button>
+          <button onclick="cambiarFiltro('respondido')" class="filter-btn" data-filter="respondido">
+            Respondidos
+          </button>
+          <button onclick="cambiarFiltro('registrado')" class="filter-btn" data-filter="registrado">
+            Registrados
+          </button>
+          <button onclick="cambiarFiltro('error')" class="filter-btn" data-filter="error">
+            Errores
+          </button>
+        </div>
+
+        <!-- Exportar -->
+        <button onclick="exportarDatos()" class="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-xl font-semibold text-sm transition-all border border-green-500/30 flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          Exportar
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Tabla de Seguimiento -->
+    <div class="glass-card rounded-2xl overflow-hidden">
+      <div class="table-container overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr>
+              <th>N°</th>
+              <th>Fecha/Hora</th>
+              <th>Nombre</th>
+              <th>Teléfono</th>
+              <th>DNI</th>
+              <th>Mensaje</th>
+              <th class="text-center">Enviado</th>
+              <th class="text-center">Recibido</th>
+              <th class="text-center">Respondido</th>
+              <th class="text-center">Registrado</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tablaSeguimiento">
+            <!-- Se llenará dinámicamente -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginación -->
+      <div class="border-t border-white/5 p-4 flex items-center justify-between">
+        <div class="text-sm text-gray-400">
+          Mostrando <span id="rangoInicio">1</span> - <span id="rangoFin">10</span> de <span id="totalRegistros">0</span> registros
+        </div>
+        <div class="flex gap-2">
+          <button onclick="cambiarPagina(-1)" class="px-3 py-1 bg-white/5 hover:bg-white/10 rounded-lg text-sm transition-all">
+            Anterior
+          </button>
+          <span class="px-3 py-1 text-sm text-gray-400">Página <span id="paginaActual">1</span></span>
+          <button onclick="cambiarPagina(1)" class="px-3 py-1 bg-white/5 hover:bg-white/10 rounded-lg text-sm transition-all">
+            Siguiente
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Modal de Ejemplo Guiado -->
+  <div id="modalEjemplo" class="modal-overlay">
+    <div class="modal-content">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold gradient-text">📖 Ejemplo Guiado - Flujo SMS</h2>
+        <button onclick="cerrarEjemplo()" class="text-gray-400 hover:text-white transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Paso 1: Inserción de Datos -->
+      <div class="mb-8">
+        <h3 class="text-xl font-bold text-blue-400 mb-4 flex items-center gap-2">
+          <span class="flex items-center justify-center w-8 h-8 bg-blue-500/20 rounded-full text-sm">1</span>
+          Inserción de Datos en Módulo SMS
+        </h3>
+        <p class="text-gray-400 mb-4">
+          Cuando envías mensajes desde <a href="../SMS/envio-masivo.html" class="text-blue-400 hover:underline">SMS/envio-masivo.html</a>, 
+          el sistema guarda automáticamente los datos en <code class="text-purple-400 bg-purple-500/10 px-2 py-1 rounded">localStorage</code>:
+        </p>
+        
+        <div class="code-block mb-4">
+<pre>// Al hacer clic en "Enviar Campaña" en envio-masivo.html
+function enviarCampana() {
+  const registrosSMS = contactos.map((contacto, index) => ({
+    id: Date.now() + index,
+    fecha: new Date().toISOString(),
+    nombre: contacto.nombre,
+    telefono: contacto.telefono,
+    dni: contacto.dni || 'N/A',
+    mensaje: mensajePersonalizado,
+    enviado: true,
+    recibido: false,
+    respondido: false,
+    registrado: false,
+    estado: 'enviado'
+  }));
+  
+  // Guardar en localStorage
+  localStorage.setItem('smsCampanas', JSON.stringify(registrosSMS));
+}</pre>
+        </div>
+
+        <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-4">
+          <p class="text-green-400 text-sm">
+            ✅ <strong>Estructura de datos:</strong> Cada SMS se almacena con todos los campos necesarios para el seguimiento completo.
+          </p>
+        </div>
+      </div>
+
+      <!-- Paso 2: Lectura de Datos -->
+      <div class="mb-8">
+        <h3 class="text-xl font-bold text-purple-400 mb-4 flex items-center gap-2">
+          <span class="flex items-center justify-center w-8 h-8 bg-purple-500/20 rounded-full text-sm">2</span>
+          Lectura de Datos en Seguimiento SMS
+        </h3>
+        <p class="text-gray-400 mb-4">
+          Esta vista (seguimiento-sms.html) lee los datos y los muestra en la tabla:
+        </p>
+        
+        <div class="code-block mb-4">
+<pre>// Cargar registros desde localStorage
+function cargarRegistros() {
+  const datos = localStorage.getItem('smsCampanas');
+  if (datos) {
+    registrosSMS = JSON.parse(datos);
+    renderizarTabla();
+    actualizarEstadisticas();
+  }
+}</pre>
+        </div>
+      </div>
+
+      <!-- Paso 3: Simulación de Estados -->
+      <div class="mb-8">
+        <h3 class="text-xl font-bold text-yellow-400 mb-4 flex items-center gap-2">
+          <span class="flex items-center justify-center w-8 h-8 bg-yellow-500/20 rounded-full text-sm">3</span>
+          Simulación de Estados
+        </h3>
+        <p class="text-gray-400 mb-4">
+          Para demostración, puedes simular cambios de estado:
+        </p>
+        
+        <div class="flex gap-3 flex-wrap">
+          <button onclick="simularRecepcion()" class="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-xl font-semibold text-sm transition-all border border-green-500/30">
+            🟢 Simular Recepción
+          </button>
+          <button onclick="simularRespuesta()" class="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded-xl font-semibold text-sm transition-all border border-purple-500/30">
+            🟣 Simular Respuesta
+          </button>
+          <button onclick="simularRegistro()" class="px-4 py-2 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 rounded-xl font-semibold text-sm transition-all border border-yellow-500/30">
+            🟡 Simular Registro
+          </button>
+        </div>
+      </div>
+
+      <!-- Paso 4: Integración -->
+      <div>
+        <h3 class="text-xl font-bold text-pink-400 mb-4 flex items-center gap-2">
+          <span class="flex items-center justify-center w-8 h-8 bg-pink-500/20 rounded-full text-sm">4</span>
+          Flujo Completo
+        </h3>
+        <div class="space-y-3">
+          <div class="flex items-start gap-3 p-3 bg-white/5 rounded-xl">
+            <span class="text-2xl">📤</span>
+            <div>
+              <p class="font-semibold text-blue-400">1. Envío desde Módulo SMS</p>
+              <p class="text-sm text-gray-400">El reclutador carga Excel y envía mensajes masivos</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-white/5 rounded-xl">
+            <span class="text-2xl">💾</span>
+            <div>
+              <p class="font-semibold text-green-400">2. Almacenamiento Automático</p>
+              <p class="text-sm text-gray-400">Los datos se guardan en localStorage con estado inicial</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-white/5 rounded-xl">
+            <span class="text-2xl">📊</span>
+            <div>
+              <p class="font-semibold text-purple-400">3. Visualización en Tabla</p>
+              <p class="text-sm text-gray-400">Esta vista muestra todos los registros con sus estados</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-white/5 rounded-xl">
+            <span class="text-2xl">🔄</span>
+            <div>
+              <p class="font-semibold text-yellow-400">4. Actualización en Tiempo Real</p>
+              <p class="text-sm text-gray-400">Los estados cambian conforme los postulantes interactúan</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 flex gap-3">
+        <button onclick="cargarDatosEjemplo()" class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-xl font-semibold transition-all">
+          🚀 Cargar Datos de Ejemplo
+        </button>
+        <button onclick="cerrarEjemplo()" class="px-6 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl font-semibold transition-all">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Variables globales
+    let registrosSMS = [];
+    let filtroActual = 'todos';
+    let paginaActual = 1;
+    const registrosPorPagina = 10;
+
+    // Verificar autenticación
+    function verificarAutenticacion() {
+      const sessionData = sessionStorage.getItem('reclutadorSession') || 
+                          localStorage.getItem('reclutadorSession');
+      
+      if (!sessionData) {
+        window.location.href = 'login.html';
+        return null;
+      }
+      
+      return JSON.parse(sessionData);
+    }
+
+    // Cerrar sesión
+    function cerrarSesion() {
+      if (confirm('¿Estás seguro de cerrar sesión?')) {
+        sessionStorage.removeItem('reclutadorSession');
+        localStorage.removeItem('reclutadorSession');
+        window.location.href = 'login.html';
+      }
+    }
+
+    // Cargar registros desde localStorage
+    function cargarRegistros() {
+      const datos = localStorage.getItem('smsCampanas');
+      if (datos) {
+        registrosSMS = JSON.parse(datos);
+      } else {
+        // Si no hay datos, mostrar mensaje
+        registrosSMS = [];
+      }
+      renderizarTabla();
+      actualizarEstadisticas();
+    }
+
+    // Renderizar tabla
+    function renderizarTabla() {
+      const tbody = document.getElementById('tablaSeguimiento');
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      
+      // Filtrar registros
+      let registrosFiltrados = registrosSMS.filter(registro => {
+        const matchSearch = registro.nombre.toLowerCase().includes(searchTerm) ||
+                           registro.telefono.includes(searchTerm) ||
+                           (registro.dni && registro.dni.includes(searchTerm));
+        
+        const matchFilter = filtroActual === 'todos' || registro.estado === filtroActual;
+        
+        return matchSearch && matchFilter;
+      });
+
+      // Paginación
+      const inicio = (paginaActual - 1) * registrosPorPagina;
+      const fin = inicio + registrosPorPagina;
+      const registrosPaginados = registrosFiltrados.slice(inicio, fin);
+
+      // Actualizar info de paginación
+      document.getElementById('rangoInicio').textContent = registrosFiltrados.length > 0 ? inicio + 1 : 0;
+      document.getElementById('rangoFin').textContent = Math.min(fin, registrosFiltrados.length);
+      document.getElementById('totalRegistros').textContent = registrosFiltrados.length;
+      document.getElementById('paginaActual').textContent = paginaActual;
+
+      if (registrosPaginados.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="12" class="text-center py-12">
+              <div class="flex flex-col items-center gap-3 text-gray-500">
+                <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                </svg>
+                <p class="text-lg font-semibold">No hay registros SMS</p>
+                <p class="text-sm">Envía mensajes desde el Módulo SMS para ver el seguimiento aquí</p>
+                <button onclick="mostrarEjemplo()" class="mt-3 px-6 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded-xl font-semibold text-sm transition-all border border-purple-500/30">
+                  Ver Ejemplo Guiado
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = registrosPaginados.map((registro, index) => {
+        const numero = inicio + index + 1;
+        const fecha = new Date(registro.fecha);
+        const fechaFormateada = fecha.toLocaleDateString('es-PE');
+        const horaFormateada = fecha.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' });
+
+        return `
+          <tr>
+            <td class="font-semibold text-gray-400">${numero}</td>
+            <td>
+              <div class="text-sm">${fechaFormateada}</div>
+              <div class="text-xs text-gray-500">${horaFormateada}</div>
+            </td>
+            <td class="font-medium">${registro.nombre}</td>
+            <td class="text-blue-400">${registro.telefono}</td>
+            <td>${registro.dni || 'N/A'}</td>
+            <td class="max-w-xs truncate text-gray-400 text-sm">${registro.mensaje.substring(0, 50)}...</td>
+            <td class="text-center">
+              ${registro.enviado ? 
+                '<span class="status-icon icon-check"></span>' : 
+                '<span class="status-icon icon-pending"></span>'}
+            </td>
+            <td class="text-center">
+              ${registro.recibido ? 
+                '<span class="status-icon icon-check"></span>' : 
+                '<span class="status-icon icon-pending"></span>'}
+            </td>
+            <td class="text-center">
+              ${registro.respondido ? 
+                '<span class="status-icon icon-check"></span>' : 
+                '<span class="status-icon icon-pending"></span>'}
+            </td>
+            <td class="text-center">
+              ${registro.registrado ? 
+                '<span class="status-icon icon-check"></span>' : 
+                '<span class="status-icon icon-pending"></span>'}
+            </td>
+            <td>
+              <span class="status-badge status-${registro.estado}">
+                ${obtenerTextoEstado(registro.estado)}
+              </span>
+            </td>
+            <td>
+              <button onclick="verDetalle(${registro.id})" class="text-blue-400 hover:text-blue-300 transition-colors text-sm">
+                Ver detalle
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Obtener texto de estado
+    function obtenerTextoEstado(estado) {
+      const estados = {
+        'enviado': 'Enviado',
+        'recibido': 'Recibido',
+        'respondido': 'Respondido',
+        'registrado': 'Registrado',
+        'error': 'Error'
+      };
+      return estados[estado] || 'Pendiente';
+    }
+
+    // Actualizar estadísticas
+    function actualizarEstadisticas() {
+      const totalEnviados = registrosSMS.filter(r => r.enviado).length;
+      const totalRecibidos = registrosSMS.filter(r => r.recibido).length;
+      const totalRespondidos = registrosSMS.filter(r => r.respondido).length;
+      const totalRegistrados = registrosSMS.filter(r => r.registrado).length;
+      const tasa = totalEnviados > 0 ? Math.round((totalRegistrados / totalEnviados) * 100) : 0;
+
+      document.getElementById('statEnviados').textContent = totalEnviados;
+      document.getElementById('statRecibidos').textContent = totalRecibidos;
+      document.getElementById('statRespondidos').textContent = totalRespondidos;
+      document.getElementById('statRegistrados').textContent = totalRegistrados;
+      document.getElementById('statTasa').textContent = tasa + '%';
+    }
+
+    // Cambiar filtro
+    function cambiarFiltro(filtro) {
+      filtroActual = filtro;
+      paginaActual = 1;
+      
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.filter === filtro) {
+          btn.classList.add('active');
+        }
+      });
+      
+      renderizarTabla();
+    }
+
+    // Filtrar tabla
+    function filtrarTabla() {
+      paginaActual = 1;
+      renderizarTabla();
+    }
+
+    // Cambiar página
+    function cambiarPagina(direccion) {
+      const totalPaginas = Math.ceil(registrosSMS.length / registrosPorPagina);
+      const nuevaPagina = paginaActual + direccion;
+      
+      if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
+        paginaActual = nuevaPagina;
+        renderizarTabla();
+      }
+    }
+
+    // Ver detalle
+    function verDetalle(id) {
+      const registro = registrosSMS.find(r => r.id === id);
+      if (registro) {
+        alert(`Detalle del SMS:\n\nNombre: ${registro.nombre}\nTeléfono: ${registro.telefono}\nDNI: ${registro.dni}\n\nMensaje:\n${registro.mensaje}\n\nEstados:\n✓ Enviado: ${registro.enviado ? 'Sí' : 'No'}\n✓ Recibido: ${registro.recibido ? 'Sí' : 'No'}\n✓ Respondido: ${registro.respondido ? 'Sí' : 'No'}\n✓ Registrado: ${registro.registrado ? 'Sí' : 'No'}`);
+      }
+    }
+
+    // Exportar datos
+    function exportarDatos() {
+      if (registrosSMS.length === 0) {
+        alert('No hay datos para exportar');
+        return;
+      }
+
+      const csv = [
+        ['N°', 'Fecha', 'Hora', 'Nombre', 'Teléfono', 'DNI', 'Enviado', 'Recibido', 'Respondido', 'Registrado', 'Estado'],
+        ...registrosSMS.map((r, i) => {
+          const fecha = new Date(r.fecha);
+          return [
+            i + 1,
+            fecha.toLocaleDateString('es-PE'),
+            fecha.toLocaleTimeString('es-PE'),
+            r.nombre,
+            r.telefono,
+            r.dni || 'N/A',
+            r.enviado ? 'Sí' : 'No',
+            r.recibido ? 'Sí' : 'No',
+            r.respondido ? 'Sí' : 'No',
+            r.registrado ? 'Sí' : 'No',
+            r.estado
+          ];
+        })
+      ].map(row => row.join(',')).join('\n');
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `seguimiento_sms_${new Date().toISOString().split('T')[0]}.csv`;
+      link.click();
+    }
+
+    // Modal de ejemplo
+    function mostrarEjemplo() {
+      document.getElementById('modalEjemplo').classList.add('active');
+    }
+
+    function cerrarEjemplo() {
+      document.getElementById('modalEjemplo').classList.remove('active');
+    }
+
+    // Cargar datos de ejemplo
+    function cargarDatosEjemplo() {
+      const datosEjemplo = [
+        {
+          id: Date.now() + 1,
+          fecha: new Date().toISOString(),
+          nombre: 'Juan Carlos Pérez',
+          telefono: '987654321',
+          dni: '12345678',
+          mensaje: 'Hola Juan Carlos, tenemos una oportunidad laboral para ti como Guardia de Seguridad. ¿Te interesa?',
+          enviado: true,
+          recibido: true,
+          respondido: true,
+          registrado: true,
+          estado: 'registrado'
+        },
+        {
+          id: Date.now() + 2,
+          fecha: new Date(Date.now() - 3600000).toISOString(),
+          nombre: 'María López Sánchez',
+          telefono: '912345678',
+          dni: '87654321',
+          mensaje: 'Estimada María, te invitamos a postular para el puesto de Supervisor de Seguridad.',
+          enviado: true,
+          recibido: true,
+          respondido: true,
+          registrado: false,
+          estado: 'respondido'
+        },
+        {
+          id: Date.now() + 3,
+          fecha: new Date(Date.now() - 7200000).toISOString(),
+          nombre: 'Carlos Rodríguez',
+          telefono: '998877665',
+          dni: '23456789',
+          mensaje: 'Hola Carlos, ¿estás disponible para una entrevista de trabajo?',
+          enviado: true,
+          recibido: true,
+          respondido: false,
+          registrado: false,
+          estado: 'recibido'
+        },
+        {
+          id: Date.now() + 4,
+          fecha: new Date(Date.now() - 10800000).toISOString(),
+          nombre: 'Ana Torres Vargas',
+          telefono: '955443322',
+          dni: '34567890',
+          mensaje: 'Buenos días Ana, tenemos un puesto disponible en tu zona.',
+          enviado: true,
+          recibido: false,
+          respondido: false,
+          registrado: false,
+          estado: 'enviado'
+        },
+        {
+          id: Date.now() + 5,
+          fecha: new Date(Date.now() - 14400000).toISOString(),
+          nombre: 'Luis Mendoza García',
+          telefono: '966554433',
+          dni: '45678901',
+          mensaje: 'Hola Luis, te contactamos de Liderman para ofrecerte una oportunidad laboral.',
+          enviado: true,
+          recibido: true,
+          respondido: true,
+          registrado: true,
+          estado: 'registrado'
+        }
+      ];
+
+      localStorage.setItem('smsCampanas', JSON.stringify(datosEjemplo));
+      registrosSMS = datosEjemplo;
+      renderizarTabla();
+      actualizarEstadisticas();
+      cerrarEjemplo();
+      
+      alert('✅ Datos de ejemplo cargados exitosamente!\n\nAhora puedes ver cómo funciona el seguimiento de SMS.');
+    }
+
+    // Simulaciones
+    function simularRecepcion() {
+      if (registrosSMS.length === 0) {
+        alert('No hay registros para simular. Carga datos de ejemplo primero.');
+        return;
+      }
+
+      registrosSMS.forEach(r => {
+        if (r.enviado && !r.recibido) {
+          r.recibido = true;
+          r.estado = 'recibido';
+        }
+      });
+
+      localStorage.setItem('smsCampanas', JSON.stringify(registrosSMS));
+      renderizarTabla();
+      actualizarEstadisticas();
+      alert('✅ Simulación completada: Todos los mensajes enviados han sido marcados como recibidos.');
+    }
+
+    function simularRespuesta() {
+      if (registrosSMS.length === 0) {
+        alert('No hay registros para simular. Carga datos de ejemplo primero.');
+        return;
+      }
+
+      registrosSMS.forEach(r => {
+        if (r.recibido && !r.respondido) {
+          r.respondido = true;
+          r.estado = 'respondido';
+        }
+      });
+
+      localStorage.setItem('smsCampanas', JSON.stringify(registrosSMS));
+      renderizarTabla();
+      actualizarEstadisticas();
+      alert('✅ Simulación completada: Todos los mensajes recibidos han sido marcados como respondidos.');
+    }
+
+    function simularRegistro() {
+      if (registrosSMS.length === 0) {
+        alert('No hay registros para simular. Carga datos de ejemplo primero.');
+        return;
+      }
+
+      registrosSMS.forEach(r => {
+        if (r.respondido && !r.registrado) {
+          r.registrado = true;
+          r.estado = 'registrado';
+        }
+      });
+
+      localStorage.setItem('smsCampanas', JSON.stringify(registrosSMS));
+      renderizarTabla();
+      actualizarEstadisticas();
+      alert('✅ Simulación completada: Todos los mensajes respondidos han sido marcados como usuarios registrados.');
+    }
+
+    // Inicializar
+    window.addEventListener('load', () => {
+      const session = verificarAutenticacion();
+      if (session) {
+        document.getElementById('userInfo').textContent = `${session.nombre} - ${session.rol}`;
+        cargarRegistros();
+      }
+    });
+  </script>
+
+</body>
+</html>
